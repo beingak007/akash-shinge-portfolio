@@ -24,7 +24,7 @@ export const profile: Profile = {
     leetcode: "https://leetcode.com/u/beingak007/",
     email: null,
     github: "https://github.com/beingak007",
-    website: null,
+    website: "https://akash-shinge.vercel.app",
   },
   seo: {
     title: "Akash Shinge — Senior Software Engineer",
@@ -36,7 +36,7 @@ export const profile: Profile = {
     twitterTitle: "Akash Shinge — Senior Software Engineer",
     twitterDescription:
       "Senior Software Engineer specializing in Java, React, microservices, distributed systems and scalable applications.",
-    canonicalUrl: null,
+    canonicalUrl: "https://akash-shinge.vercel.app",
   },
 };
 

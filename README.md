@@ -49,7 +49,7 @@ This is a static Vite app. `npm run build` writes `dist/`. No server is required
 1. Push this repo to GitHub (`beingak007/akash-shinge-portfolio`).
 2. Open [vercel.com](https://vercel.com) → Sign in with GitHub → **Add New Project** → select the repo.
 3. Keep the Vite defaults: build `npm run build`, output `dist`.
-4. Deploy. You get an HTTPS URL like `https://akash-shinge-portfolio.vercel.app`.
+4. Production is live at `https://akash-shinge.vercel.app` (also `https://beingak007.vercel.app`).
 
 Do not set `BASE_PATH` on Vercel. It must stay `/`.
 
