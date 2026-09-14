@@ -1,0 +1,67 @@
+.think__title {
+  margin-bottom: 2.5rem;
+  font-size: clamp(2.4rem, 5vw, 4.6rem);
+}
+
+.think__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.think__item {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+  gap: 1rem;
+  width: 100%;
+  padding: 1.15rem 0;
+  border-top: 1px solid var(--line);
+  text-align: left;
+  color: var(--ink);
+}
+
+.think__item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.think__index {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  padding-top: 0.45rem;
+}
+
+.think__name {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.think__body {
+  display: block;
+  max-height: 0;
+  overflow: hidden;
+  margin-top: 0;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  opacity: 0;
+  transition: max-height 0.35s var(--ease), opacity 0.35s var(--ease),
+    margin-top 0.35s var(--ease);
+}
+
+.think__item.is-open .think__body,
+.think__item:hover .think__body,
+.think__item:focus-visible .think__body {
+  max-height: 8rem;
+  margin-top: 0.85rem;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .think__body {
+    transition: none;
+  }
+}

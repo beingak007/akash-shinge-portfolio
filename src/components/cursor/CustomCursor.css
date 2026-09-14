@@ -1,0 +1,48 @@
+.cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.cursor.is-on {
+  opacity: 1;
+}
+
+.cursor__dot,
+.cursor__follow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.cursor__dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--accent);
+}
+
+.cursor__follow {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  border: 1px solid var(--accent);
+}
+
+.cursor__label {
+  max-width: 7.5rem;
+  padding: 0 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.48rem;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ink);
+  opacity: 0;
+}

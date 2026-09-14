@@ -1,0 +1,78 @@
+.experience__title {
+  margin-bottom: 3rem;
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
+}
+
+.timeline {
+  position: relative;
+  padding-left: 2.2rem;
+}
+
+.timeline__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: var(--line);
+}
+
+.timeline__line span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: top center;
+}
+
+.timeline__item {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1.5rem;
+  padding-bottom: 3rem;
+}
+
+.timeline__year {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+.timeline__company,
+.timeline__period,
+.timeline__note {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+}
+
+.timeline__role {
+  margin: 0.25rem 0 0.4rem;
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 400;
+}
+
+.timeline__label {
+  display: block;
+  margin: 1rem 0 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+.timeline__note {
+  margin-top: 1rem;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 700px) {
+  .timeline__item {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+}

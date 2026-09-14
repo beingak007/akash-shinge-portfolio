@@ -1,0 +1,101 @@
+.playground {
+  overflow-x: clip;
+}
+
+.playground__title {
+  margin-bottom: 1rem;
+  font-size: clamp(2.4rem, 5vw, 4.6rem);
+}
+
+.playground__desc {
+  min-height: 3.4rem;
+  margin: 1.6rem 0;
+  max-width: 40rem;
+  color: var(--ink-soft);
+}
+
+.playground__desc strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+.playground {
+  overflow-x: clip;
+}
+
+.playground__stage {
+  overflow-x: auto;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.playground__canvas {
+  position: relative;
+}
+
+.playground__svg {
+  width: 100%;
+  height: auto;
+}
+
+.playground__edge {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.2;
+}
+
+.playground__edge.is-live {
+  stroke: var(--accent);
+}
+
+.playground__node rect {
+  stroke: rgba(11, 11, 10, 0.35);
+}
+
+.playground__node text {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.playground__node.is-active rect {
+  stroke: var(--accent);
+}
+
+.playground__node.is-muted {
+  opacity: 0.28;
+}
+
+.playground__hit {
+  position: absolute;
+  width: 160px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  background: transparent;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (max-width: 800px) {
+  .playground__canvas {
+    min-width: 820px;
+  }
+}

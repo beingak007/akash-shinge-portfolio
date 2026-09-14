@@ -1,0 +1,155 @@
+.work {
+  position: relative;
+  overflow: clip;
+}
+
+.work__intro {
+  padding: 5rem 5vw 2rem calc(var(--rail) + 5vw);
+}
+
+.work__title {
+  margin: 0.6rem 0 1rem;
+  font-size: clamp(3rem, 8vw, 7rem);
+}
+
+.work__track {
+  display: flex;
+  width: max-content;
+}
+
+.project {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(280px, 1.1fr);
+  gap: 2.5rem;
+  width: 100%;
+  min-width: min(100vw, 100%);
+  min-height: 86svh;
+  padding: 1.5rem 5vw 4rem calc(var(--rail) + 5vw);
+  border-top: 1px solid var(--line);
+}
+
+.project__index {
+  margin: 0 0 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+}
+
+.project__name {
+  margin: 0 0 1rem;
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+.project__problem {
+  max-width: 36rem;
+  color: var(--ink-soft);
+}
+
+.project__meta {
+  margin: 1rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.project__meta span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.16em;
+}
+
+.project__note {
+  margin-top: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+
+.project__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+
+.project__visual {
+  display: grid;
+  place-items: center;
+  min-height: 280px;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.project-flow,
+.project-flow__row,
+.project-flow__fork {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+.project-flow {
+  flex-direction: column;
+  padding: 2rem 1rem;
+}
+
+.project-flow__node {
+  display: inline-flex;
+  min-height: 2.2rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+}
+
+.project-flow__line {
+  width: 1px;
+  height: 1.4rem;
+  background: var(--accent);
+  transform-origin: top center;
+}
+
+.project-flow__fork {
+  align-items: flex-start;
+}
+
+.project-flow__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (max-width: 1099px) {
+  .work__intro,
+  .project {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .work__track {
+    display: block;
+    width: 100%;
+  }
+
+  .project {
+    width: 100%;
+    min-height: auto;
+    grid-template-columns: 1fr;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+}

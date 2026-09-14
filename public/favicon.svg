@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#0b0b0a"/>
+  <path d="M3 3h5M3 3v5M29 3h-5M29 3v5M3 29h5M3 29v-5M29 29h-5M29 29v-5" stroke="#d4783a" stroke-width="1" fill="none"/>
+  <text x="16" y="21" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#ece7dc">AS</text>
+</svg>
