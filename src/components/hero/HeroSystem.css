@@ -152,8 +152,8 @@
   }
 
   .hero-system__stage {
-    min-height: 18.5rem;
-    aspect-ratio: 1 / 1.02;
+    min-height: 16.2rem;
+    aspect-ratio: 1.12 / 1;
   }
 
   .hero-system__node {

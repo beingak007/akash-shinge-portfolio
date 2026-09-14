@@ -134,7 +134,7 @@
 @media (max-width: 1099px) {
   .hero {
     padding: calc(5.6rem + var(--safe-top)) max(1.15rem, var(--safe-right))
-      3.2rem max(1.15rem, var(--safe-left));
+      calc(5.4rem + var(--safe-bottom)) max(1.15rem, var(--safe-left));
     min-height: auto;
     gap: 1.6rem;
   }
