@@ -51,9 +51,9 @@ export function About() {
       <div className="about__grid">
         <div data-reveal>
           <h2 className="display about__title">
-            ENGINEER.
+            AKASH SHINGE.
             <br />
-            PROBLEM SOLVER.
+            ENGINEER.
             <br />
             BUILDER.
           </h2>

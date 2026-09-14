@@ -46,9 +46,9 @@ export function Hero() {
 
       <div className="hero__top">
         <div>
-          <p className="hero__name" data-hero-name>
-            {profile.name.toUpperCase()}
-          </p>
+          <h1 className="hero__name" data-hero-name>
+            {profile.name}
+          </h1>
           <p className="kicker" data-hero-label>
             {profile.role.toUpperCase()}
           </p>
@@ -60,9 +60,9 @@ export function Hero() {
 
       <div className="hero__stage">
         <div className="hero__copy">
-          <h1 className="hero__title" data-hero-heading>
+          <p className="hero__title" data-hero-heading>
             {profile.statement}
-          </h1>
+          </p>
           <div className="hero__actions" data-hero-actions>
             <button
               className="btn btn--solid"

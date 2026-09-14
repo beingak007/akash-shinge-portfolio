@@ -27,15 +27,15 @@ export const profile: Profile = {
     website: "https://akash-shinge.vercel.app",
   },
   seo: {
-    title: "Akash Shinge — Senior Software Engineer",
+    title: "Akash Shinge | Senior Software Engineer in Pune",
     description:
-      "Senior Software Engineer specializing in Java, React, microservices, distributed systems and scalable applications.",
-    ogTitle: "Akash Shinge — Senior Software Engineer",
+      "Akash Shinge is a Senior Software Engineer in Pune, India. Official portfolio — Java, Spring Boot, React, Kafka, Redis, Cassandra, and distributed systems.",
+    ogTitle: "Akash Shinge | Senior Software Engineer",
     ogDescription:
-      "Senior Software Engineer specializing in Java, React, microservices, distributed systems and scalable applications.",
-    twitterTitle: "Akash Shinge — Senior Software Engineer",
+      "Official site of Akash Shinge, Senior Software Engineer in Pune. Java, React, and distributed systems.",
+    twitterTitle: "Akash Shinge | Senior Software Engineer",
     twitterDescription:
-      "Senior Software Engineer specializing in Java, React, microservices, distributed systems and scalable applications.",
+      "Official portfolio of Akash Shinge — Senior Software Engineer in Pune, India.",
     canonicalUrl: "https://akash-shinge.vercel.app",
   },
 };

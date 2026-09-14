@@ -40,6 +40,16 @@ Portraits:
 
 Email stays `null` until you add it.
 
+## Search (Google)
+
+The live site is the official page for **Akash Shinge**. After each deploy:
+
+1. Open [Google Search Console](https://search.google.com/search-console) → add `https://akash-shinge.vercel.app`
+2. Submit `https://akash-shinge.vercel.app/sitemap.xml`
+3. Put the same URL on LinkedIn (Website) and GitHub so Google sees matching links
+
+Indexing is not instant. Searching `Akash Shinge` after Google crawls should list this site.
+
 ## Free host
 
 This is a static Vite app. `npm run build` writes `dist/`. No server is required.
