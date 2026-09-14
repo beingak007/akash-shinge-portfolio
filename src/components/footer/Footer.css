@@ -40,10 +40,17 @@
   color: var(--accent);
 }
 
+@media (max-width: 1099px) {
+  .footer {
+    padding-bottom: calc(5.6rem + var(--safe-bottom));
+  }
+}
+
 @media (max-width: 700px) {
   .footer {
     flex-direction: column;
-    padding: 2rem 1.25rem 5.5rem;
+    padding: 2rem max(1.15rem, var(--safe-left)) calc(5.8rem + var(--safe-bottom))
+      max(1.15rem, var(--safe-right));
   }
 
   .footer__meta {

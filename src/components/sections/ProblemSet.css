@@ -92,4 +92,8 @@
   .problems__grid {
     grid-template-columns: 1fr;
   }
+
+  .problems__figure {
+    max-width: 16rem;
+  }
 }

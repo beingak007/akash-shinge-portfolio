@@ -111,6 +111,10 @@
   .portrait--hero {
     width: min(72vw, 280px);
   }
+
+  .portrait--contact {
+    width: min(160px, 42vw);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

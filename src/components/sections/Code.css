@@ -57,4 +57,17 @@
   .code__grid {
     grid-template-columns: 1fr;
   }
+
+  .code__pre {
+    padding: 1rem 0.8rem;
+  }
+
+  .code__pre code {
+    font-size: 0.72rem;
+  }
+
+  .code__num {
+    width: 1.6rem;
+    margin-right: 0.5rem;
+  }
 }

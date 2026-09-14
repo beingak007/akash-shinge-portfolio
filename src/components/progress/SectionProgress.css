@@ -61,15 +61,15 @@
 @media (max-width: 1099px) {
   .progress {
     top: auto;
-    bottom: 0.75rem;
-    right: 0.75rem;
-    left: 0.75rem;
+    bottom: max(0.55rem, var(--safe-bottom));
+    right: max(0.55rem, var(--safe-right));
+    left: max(0.55rem, var(--safe-left));
     transform: none;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 0.45rem 0.7rem;
-    background: rgba(11, 11, 10, 0.88);
+    padding: 0.35rem 0.45rem;
+    background: rgba(11, 11, 10, 0.9);
     border: 1px solid var(--line);
   }
 
@@ -83,5 +83,12 @@
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
+    gap: 0.15rem;
+  }
+
+  .progress__btn {
+    min-height: 2.4rem;
+    padding: 0 0.2rem;
+    font-size: 0.62rem;
   }
 }

@@ -42,7 +42,7 @@
     linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
   background-size: 28px 28px;
   overflow: hidden;
-  touch-action: none;
+  touch-action: pan-y;
 }
 
 .hero-system__wires {
@@ -141,32 +141,56 @@
   }
 
   .hero-system__stage {
-    min-height: 280px;
+    min-height: 300px;
+    aspect-ratio: 1.15 / 1;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 700px) {
   .hero-system__lane {
     display: none;
   }
 
+  .hero-system__stage {
+    min-height: 18.5rem;
+    aspect-ratio: 1 / 1.02;
+  }
+
   .hero-system__node {
-    width: 3.6rem;
+    width: 3.15rem;
+  }
+
+  .hero-system__node.is-hub {
+    width: 3.5rem;
   }
 
   .hero-system__mark {
-    width: 2.6rem;
-    height: 2.6rem;
+    width: 2.35rem;
+    height: 2.35rem;
   }
 
   .hero-system__node.is-hub .hero-system__mark {
-    width: 3rem;
-    height: 3rem;
+    width: 2.7rem;
+    height: 2.7rem;
   }
 
   .hero-system__node svg,
   .hero-system__node.is-hub svg {
-    width: 1.4rem;
-    height: 1.4rem;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .hero-system__node span:last-child {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.42rem;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-system__live {
+    min-height: 3.4rem;
+    font-size: 0.62rem;
   }
 }

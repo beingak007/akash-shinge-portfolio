@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { bindMagnetic } from "../../animations/magnetic.ts";
 import { navigation } from "../../data/navigation.ts";
 import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
@@ -19,6 +19,13 @@ export function FloatingNav({ activeId }: FloatingNavProps) {
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(false);
   const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.toggle("is-nav-open", open);
+    return () => {
+      document.body.classList.remove("is-nav-open");
+    };
+  }, [open]);
 
   useGSAP(
     () => {

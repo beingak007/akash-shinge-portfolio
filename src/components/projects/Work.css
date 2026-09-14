@@ -136,8 +136,8 @@
 @media (max-width: 1099px) {
   .work__intro,
   .project {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-left: max(1.15rem, var(--safe-left));
+    padding-right: max(1.15rem, var(--safe-right));
   }
 
   .work__track {
@@ -145,11 +145,19 @@
     width: 100%;
   }
 
+  .work__title {
+    font-size: clamp(2.4rem, 12vw, 4.6rem);
+  }
+
   .project {
     width: 100%;
     min-height: auto;
     grid-template-columns: 1fr;
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
+    padding-top: 2.2rem;
+    padding-bottom: 2.2rem;
+  }
+
+  .project__visual {
+    min-height: 220px;
   }
 }

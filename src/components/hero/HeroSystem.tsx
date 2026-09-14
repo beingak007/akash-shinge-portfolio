@@ -51,7 +51,11 @@ export function HeroSystem() {
   const reduced = useReducedMotion();
   const desktop = useDesktopPointer();
   const [activeId, setActiveId] = useState<string | null>(null);
-  const live = activeId ? workflowCopy[activeId] : "Hover a logo. Nodes attract, the workflow keeps moving.";
+  const live = activeId
+    ? workflowCopy[activeId]
+    : desktop
+      ? "Hover a logo. Nodes attract, the workflow keeps moving."
+      : "Tap a logo to see how it moves through the system.";
   const hot = activeId ? connectedTo(activeId) : null;
 
   useEffect(() => {
@@ -66,6 +70,7 @@ export function HeroSystem() {
         const prev = bodies.current.find((body) => body.id === node.id);
         const homeX = (node.x / 100) * box.width;
         const homeY = (node.y / 100) * box.height;
+        const compact = box.width < 560;
         return {
           id: node.id,
           homeX,
@@ -74,7 +79,7 @@ export function HeroSystem() {
           y: prev?.y ?? homeY,
           vx: prev?.vx ?? 0,
           vy: prev?.vy ?? 0,
-          radius: node.hub ? 36 : 28,
+          radius: node.hub ? (compact ? 22 : 36) : compact ? 16 : 28,
         };
       });
     };
@@ -147,8 +152,9 @@ export function HeroSystem() {
         body.vy = (body.vy + fy) * DAMP;
         body.x += body.vx * dt;
         body.y += body.vy * dt;
-        body.x = body.homeX + Math.max(-MAX_PULL, Math.min(MAX_PULL, body.x - body.homeX));
-        body.y = body.homeY + Math.max(-MAX_PULL, Math.min(MAX_PULL, body.y - body.homeY));
+        const pull = list[0] && list[0].radius < 24 ? 16 : MAX_PULL;
+        body.x = body.homeX + Math.max(-pull, Math.min(pull, body.x - body.homeX));
+        body.y = body.homeY + Math.max(-pull, Math.min(pull, body.y - body.homeY));
       }
 
       for (const body of list) {
@@ -202,7 +208,9 @@ export function HeroSystem() {
 
   return (
     <div className="hero-system" data-hero-system>
-      <p className="hero-system__label">WORKFLOW · HOVER TO ATTRACT</p>
+      <p className="hero-system__label">
+        {desktop ? "WORKFLOW · HOVER TO ATTRACT" : "WORKFLOW · TAP A LOGO"}
+      </p>
       <div
         ref={stage}
         className="hero-system__stage"
@@ -210,8 +218,10 @@ export function HeroSystem() {
         onPointerEnter={onPointerMove}
         onPointerLeave={() => {
           mouse.current.inside = false;
-          hover.current = null;
-          setActiveId(null);
+          if (desktop) {
+            hover.current = null;
+            setActiveId(null);
+          }
         }}
       >
         <svg className="hero-system__wires" aria-hidden="true">
@@ -276,16 +286,20 @@ export function HeroSystem() {
                 setActiveId(node.id);
               }}
               onPointerLeave={() => {
-                hover.current = null;
-                setActiveId(null);
+                if (desktop) {
+                  hover.current = null;
+                  setActiveId(null);
+                }
               }}
               onFocus={() => {
                 hover.current = node.id;
                 setActiveId(node.id);
               }}
               onBlur={() => {
-                hover.current = null;
-                setActiveId(null);
+                if (desktop) {
+                  hover.current = null;
+                  setActiveId(null);
+                }
               }}
             >
               <span className="hero-system__mark">

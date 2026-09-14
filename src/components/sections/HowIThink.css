@@ -55,9 +55,24 @@
 .think__item.is-open .think__body,
 .think__item:hover .think__body,
 .think__item:focus-visible .think__body {
-  max-height: 8rem;
+  max-height: 18rem;
   margin-top: 0.85rem;
   opacity: 1;
+}
+
+@media (pointer: coarse) {
+  .think__item:hover .think__body {
+    max-height: 0;
+    margin-top: 0;
+    opacity: 0;
+  }
+
+  .think__item.is-open .think__body,
+  .think__item:focus-visible .think__body {
+    max-height: 18rem;
+    margin-top: 0.85rem;
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
