@@ -88,6 +88,8 @@
     linear-gradient(to right, var(--grid) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
   background-size: 40px 40px;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .project-flow,

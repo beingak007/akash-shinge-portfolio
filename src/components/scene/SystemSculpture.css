@@ -1,0 +1,119 @@
+.sculpture {
+  margin-top: 2.8rem;
+}
+
+.sculpture__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.sculpture__live {
+  min-height: 3.2rem;
+  margin: 0 0 1.1rem;
+  max-width: 40rem;
+  color: var(--ink-soft);
+}
+
+.sculpture__live strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+.sculpture__stage {
+  position: relative;
+  overflow: hidden;
+  height: min(62vh, 520px);
+  min-height: 360px;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  perspective: 980px;
+  touch-action: pan-y;
+}
+
+.sculpture__lattice {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sculpture__world {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.sculpture__face {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  padding: 0.7rem;
+  border: 1px solid rgba(11, 11, 10, 0.35);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  transform: translate3d(var(--x), var(--y), var(--z)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  pointer-events: auto;
+  will-change: transform, opacity;
+}
+
+.sculpture__face.is-active {
+  transform: translate3d(var(--x), var(--y), calc(var(--z) + 56px))
+    rotateY(var(--ry)) scale(1.06);
+  box-shadow: 0 0 0 1px var(--bg), 0 0 0 3px var(--accent);
+}
+
+.sculpture__face.is-dim {
+  opacity: 0.34;
+}
+
+@media (max-width: 800px) {
+  .sculpture__stage {
+    height: 22rem;
+    min-height: 20rem;
+  }
+
+  .sculpture__face {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    transform: translate3d(
+      calc(var(--x) * 0.62),
+      calc(var(--y) * 0.62),
+      calc(var(--z) * 0.7)
+    )
+      rotateY(var(--ry));
+  }
+
+  .sculpture__face.is-active {
+    transform: translate3d(
+      calc(var(--x) * 0.62),
+      calc(var(--y) * 0.62),
+      calc(var(--z) * 0.7 + 40px)
+    )
+      rotateY(var(--ry)) scale(1.04);
+  }
+}
+
+@media (max-width: 520px) {
+  .sculpture__face {
+    width: calc(var(--w, 140px) * 0.72) !important;
+    height: calc(var(--h, 80px) * 0.72) !important;
+  }
+}

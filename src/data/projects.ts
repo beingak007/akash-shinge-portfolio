@@ -7,8 +7,27 @@ import type { Project } from "../types/index.ts";
  */
 export const projects: Project[] = [
   {
-    id: "event-spine",
+    id: "farm-kart",
     index: "01",
+    name: "FARM KART",
+    problem:
+      "A farm commerce path cannot treat catalog, stock, cart, and payment as one process. The order write must stay transactional while inventory and notifications fan out.",
+    tech: ["Java", "Spring Boot", "Kafka", "Redis", "MySQL", "Cassandra", "AWS", "Datadog"],
+    impact: ["Decoupling", "Consistency", "Scale"],
+    flow: [
+      { id: "client", label: "CLIENT" },
+      { id: "gateway", label: "GATEWAY" },
+      { id: "service", label: "SERVICE" },
+      { id: "kafka", label: "KAFKA" },
+      { id: "store", label: "STORE" },
+    ],
+    image: null,
+    links: [{ label: "SYSTEM MAP", href: "#farmkart", kind: "case-study" }],
+    kind: "study",
+  },
+  {
+    id: "event-spine",
+    index: "02",
     name: "EVENT SPINE",
     problem:
       "Direct service-to-service calls harden the wrong dependencies. The write path needs a spine that can fan out without turning every change into a coordinated release.",
@@ -27,7 +46,7 @@ export const projects: Project[] = [
   },
   {
     id: "dual-store",
-    index: "02",
+    index: "03",
     name: "DUAL-STORE PATH",
     problem:
       "Transactional truth and high-volume reads do not want the same store. The system has to choose the engine per access pattern without leaking that choice into every caller.",
@@ -45,7 +64,7 @@ export const projects: Project[] = [
   },
   {
     id: "contract-surface",
-    index: "03",
+    index: "04",
     name: "CONTRACT SURFACE",
     problem:
       "A precise backend is wasted if the interface cannot express state, failure, or latency. The contract has to be as designed as the service behind it.",

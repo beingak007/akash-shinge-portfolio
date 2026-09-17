@@ -3,10 +3,12 @@ import {
   animateProjectFlows,
   pinHorizontalWork,
 } from "../../animations/scrollAnimations.ts";
+import { bindTilt3d } from "../../animations/tilt3d.ts";
 import { projects } from "../../data/projects.ts";
 import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { useGSAP } from "../../utils/gsap.ts";
+import { scrollToSection } from "../../utils/scrollToSection.ts";
 import { ProjectFlow } from "./ProjectFlow.tsx";
 import "./Work.css";
 
@@ -22,6 +24,17 @@ export function Work() {
       }
       pinHorizontalWork(root.current, reduced, desktop);
       animateProjectFlows(root.current, reduced);
+      if (reduced || !desktop) {
+        return;
+      }
+      const cleanups = [
+        ...root.current.querySelectorAll<HTMLElement>("[data-tilt-3d]"),
+      ].map((el) => bindTilt3d(el, 8));
+      return () => {
+        cleanups.forEach((fn) => {
+          fn();
+        });
+      };
     },
     { scope: root, dependencies: [reduced, desktop] },
   );
@@ -65,22 +78,32 @@ export function Work() {
               ) : null}
               {project.links.length > 0 ? (
                 <div className="project__links">
-                  {project.links.map((link) => (
-                    <a
-                      key={link.href}
-                      className="btn"
-                      href={link.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      data-cursor="open"
-                    >
-                      {link.label}
-                    </a>
-                  ))}
+                  {project.links.map((link) => {
+                    const internal = link.href.startsWith("#");
+                    return (
+                      <a
+                        key={link.href}
+                        className="btn"
+                        href={link.href}
+                        target={internal ? undefined : "_blank"}
+                        rel={internal ? undefined : "noreferrer"}
+                        data-cursor="open"
+                        onClick={(event) => {
+                          if (!internal) {
+                            return;
+                          }
+                          event.preventDefault();
+                          scrollToSection(link.href.slice(1), reduced);
+                        }}
+                      >
+                        {link.label}
+                      </a>
+                    );
+                  })}
                 </div>
               ) : null}
             </div>
-            <div className="project__visual">
+            <div className="project__visual" data-tilt-3d>
               {project.image ? (
                 <img src={project.image} alt="" loading="lazy" />
               ) : (

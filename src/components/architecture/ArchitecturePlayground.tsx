@@ -1,8 +1,11 @@
 import { useMemo, useRef, useState } from "react";
+import { bindTilt3d } from "../../animations/tilt3d.ts";
 import { playgroundEdges, playgroundNodes } from "../../data/technologies.ts";
+import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import type { PlaygroundNode } from "../../types/index.ts";
 import { gsap, useGSAP } from "../../utils/gsap.ts";
+import { SystemSculpture } from "../scene/SystemSculpture.tsx";
 import "./ArchitecturePlayground.css";
 
 function nodeById(id: string): PlaygroundNode | undefined {
@@ -22,7 +25,9 @@ function connectedIds(id: string): Set<string> {
 
 export function ArchitecturePlayground() {
   const svg = useRef<SVGSVGElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const desktop = useDesktopPointer();
   const [activeId, setActiveId] = useState<string | null>(null);
   const active = activeId ? nodeById(activeId) : undefined;
   const related = activeId ? connectedIds(activeId) : new Set<string>();
@@ -62,6 +67,16 @@ export function ArchitecturePlayground() {
 
   useGSAP(
     () => {
+      if (!stage.current || reduced || !desktop) {
+        return;
+      }
+      return bindTilt3d(stage.current, 6);
+    },
+    { dependencies: [reduced, desktop] },
+  );
+
+  useGSAP(
+    () => {
       if (!svg.current || reduced || !activeId) {
         return;
       }
@@ -97,8 +112,8 @@ export function ArchitecturePlayground() {
       </h2>
       <p className="lede" data-reveal>
         A quote path that caches in Redis, publishes to Kafka, then fans into
-        MySQL and Cassandra. Docker is how the consumers ship. Hover a node to
-        see what it owns.
+        MySQL and Cassandra. Docker is how the consumers ship. Hover a node, or
+        turn the 3D system and click a plane.
       </p>
 
       <p className="playground__desc" aria-live="polite">
@@ -112,7 +127,7 @@ export function ArchitecturePlayground() {
         )}
       </p>
 
-      <div className="playground__stage">
+      <div ref={stage} className="playground__stage">
         <div className="playground__canvas">
         <svg
           ref={svg}
@@ -186,12 +201,16 @@ export function ArchitecturePlayground() {
             onBlur={() => {
               setActiveId(null);
             }}
+            onClick={() => {
+              setActiveId((current) => (current === node.id ? null : node.id));
+            }}
           >
             <span className="visually-hidden">{node.label}</span>
           </button>
         ))}
         </div>
       </div>
+      <SystemSculpture />
     </section>
   );
 }

@@ -100,6 +100,9 @@ export function bindHeroPointer(
     gsap.to(heading, {
       x: x * 10,
       y: y * 6,
+      rotateY: x * 7,
+      rotateX: y * -5,
+      transformPerspective: 900,
       duration: 0.9,
       ease: "power2.out",
       overwrite: "auto",
@@ -107,6 +110,9 @@ export function bindHeroPointer(
     gsap.to(system, {
       x: x * -12,
       y: y * -8,
+      rotateY: x * -10,
+      rotateX: y * 6,
+      transformPerspective: 920,
       duration: 0.85,
       ease: "power2.out",
       overwrite: "auto",

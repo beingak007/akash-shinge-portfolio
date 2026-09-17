@@ -1,8 +1,12 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { bindTilt3d } from "../../animations/tilt3d.ts";
 import { techInk } from "../../data/techColors.ts";
 import { skillCategories, technologies } from "../../data/technologies.ts";
+import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
+import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import type { Technology } from "../../types/index.ts";
 import { findTechnology, relatedSet } from "../../utils/techGraph.ts";
+import { useGSAP } from "../../utils/gsap.ts";
 import "./StackMap.css";
 
 function nodeClass(tech: Technology, activeId: string | null): string {
@@ -24,7 +28,20 @@ function nodeClass(tech: Technology, activeId: string | null): string {
 }
 
 export function StackMap() {
+  const map = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+  const desktop = useDesktopPointer();
   const [activeId, setActiveId] = useState<string | null>(null);
+
+  useGSAP(
+    () => {
+      if (!map.current || reduced || !desktop) {
+        return;
+      }
+      return bindTilt3d(map.current, 7);
+    },
+    { dependencies: [reduced, desktop] },
+  );
 
   const lines = useMemo(() => {
     if (!activeId) {
@@ -68,7 +85,7 @@ export function StackMap() {
           : "No node selected."}
       </p>
 
-      <div className="stack-map" data-reveal>
+      <div ref={map} className="stack-map" data-reveal>
         <svg className="stack-map__svg" viewBox="0 0 1000 560" role="presentation">
           {skillCategories.map((category, index) => (
             <text
@@ -116,6 +133,9 @@ export function StackMap() {
             }}
             onBlur={() => {
               setActiveId(null);
+            }}
+            onClick={() => {
+              setActiveId((current) => (current === tech.id ? null : tech.id));
             }}
           >
             {tech.name}

@@ -20,6 +20,7 @@ interface Body {
   vx: number;
   vy: number;
   radius: number;
+  hub?: boolean;
 }
 
 const SPRING = 0.14;
@@ -48,14 +49,15 @@ export function HeroSystem() {
   const bodies = useRef<Body[]>([]);
   const mouse = useRef({ x: 0, y: 0, inside: false });
   const hover = useRef<string | null>(null);
+  const shocks = useRef<Record<string, number>>({});
   const reduced = useReducedMotion();
   const desktop = useDesktopPointer();
   const [activeId, setActiveId] = useState<string | null>(null);
   const live = activeId
     ? workflowCopy[activeId]
     : desktop
-      ? "Hover a logo. Nodes attract, the workflow keeps moving."
-      : "Tap a logo to see how it moves through the system.";
+      ? "Hover a logo. Click it — the node strikes and the path keeps moving."
+      : "Tap a logo to strike it and see how it moves through the system.";
   const hot = activeId ? connectedTo(activeId) : null;
 
   useEffect(() => {
@@ -80,6 +82,7 @@ export function HeroSystem() {
           vx: prev?.vx ?? 0,
           vy: prev?.vy ?? 0,
           radius: node.hub ? (compact ? 22 : 36) : compact ? 16 : 28,
+          hub: node.hub,
         };
       });
     };
@@ -162,8 +165,23 @@ export function HeroSystem() {
         if (!el) {
           continue;
         }
+        const shock = shocks.current[body.id] ?? 0;
+        if (shock > 0.02) {
+          shocks.current[body.id] = shock * 0.78;
+        } else {
+          shocks.current[body.id] = 0;
+        }
+        const jx = shock ? Math.sin(elapsed * 22 + body.homeX) * 6 * shock : 0;
+        const jy = shock ? Math.cos(elapsed * 19 + body.homeY) * 5 * shock : 0;
         const scale = focus === body.id ? 1.12 : 1;
-        el.style.transform = `translate3d(calc(-50% + ${body.x - body.homeX}px), calc(-50% + ${body.y - body.homeY}px), 0) scale(${scale})`;
+        const lift = (focus === body.id ? 32 : 0) + (body.hub ? 14 : 0);
+        const rx = pointer
+          ? ((mouse.current.y / (root.clientHeight || 1)) - 0.5) * -11
+          : 0;
+        const ry = pointer
+          ? ((mouse.current.x / (root.clientWidth || 1)) - 0.5) * 14
+          : 0;
+        el.style.transform = `translate3d(calc(-50% + ${body.x - body.homeX + jx}px), calc(-50% + ${body.y - body.homeY + jy}px), ${lift}px) rotateX(${rx}deg) rotateY(${ry}deg) scale(${scale})`;
       }
 
       for (const edge of workflowEdges) {
@@ -209,7 +227,7 @@ export function HeroSystem() {
   return (
     <div className="hero-system" data-hero-system>
       <p className="hero-system__label">
-        {desktop ? "WORKFLOW · HOVER TO ATTRACT" : "WORKFLOW · TAP A LOGO"}
+        {desktop ? "WORKFLOW · HOVER TO ATTRACT · CLICK TO STRIKE" : "WORKFLOW · TAP TO STRIKE"}
       </p>
       <div
         ref={stage}
@@ -281,6 +299,17 @@ export function HeroSystem() {
               }${on ? "" : " is-dim"}`}
               style={{ left: `${node.x}%`, top: `${node.y}%` }}
               data-cursor="view"
+              data-physics-shake
+              onClick={() => {
+                hover.current = node.id;
+                setActiveId(node.id);
+                const body = bodies.current.find((item) => item.id === node.id);
+                if (body && !reduced) {
+                  body.vx += (Math.random() - 0.5) * 24;
+                  body.vy += (Math.random() - 0.5) * 24;
+                  shocks.current[node.id] = 1;
+                }
+              }}
               onPointerEnter={() => {
                 hover.current = node.id;
                 setActiveId(node.id);

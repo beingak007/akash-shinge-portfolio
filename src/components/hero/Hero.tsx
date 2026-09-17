@@ -81,7 +81,7 @@ export function Hero() {
               data-cursor="open"
               data-magnetic
               onClick={() => {
-                scrollToSection("playground", reduced);
+                scrollToSection("farmkart", reduced);
               }}
             >
               EXPLORE ARCHITECTURE

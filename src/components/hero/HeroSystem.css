@@ -1,6 +1,7 @@
 .hero-system {
   width: min(100%, 580px);
   justify-self: end;
+  transform-style: preserve-3d;
 }
 
 .hero-system__label,
@@ -43,6 +44,8 @@
   background-size: 28px 28px;
   overflow: hidden;
   touch-action: pan-y;
+  perspective: 780px;
+  transform-style: preserve-3d;
 }
 
 .hero-system__wires {
@@ -87,6 +90,7 @@
   background: transparent;
   color: var(--ink);
   transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
   will-change: transform;
 }
 

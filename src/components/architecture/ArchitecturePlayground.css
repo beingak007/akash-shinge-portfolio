@@ -39,6 +39,8 @@
     linear-gradient(to right, var(--grid) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
   background-size: 48px 48px;
+  perspective: 1100px;
+  transform-style: preserve-3d;
 }
 
 .playground__canvas {

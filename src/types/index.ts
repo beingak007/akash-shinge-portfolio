@@ -168,6 +168,47 @@ export interface PlaygroundEdge {
   to: string;
 }
 
+export type FarmKartLane =
+  | "client"
+  | "gateway"
+  | "security"
+  | "service"
+  | "events"
+  | "cache"
+  | "data"
+  | "infra"
+  | "observe";
+
+export type FarmKartEdgeKind = "sync" | "async" | "data" | "runtime";
+
+export type FarmKartView =
+  | "product"
+  | "order"
+  | "inventory"
+  | "architecture"
+  | "infra";
+
+export interface FarmKartNode {
+  id: string;
+  label: string;
+  lane: FarmKartLane;
+  x: number;
+  y: number;
+  color: string;
+  ink: string;
+  responsibility: string;
+  technology: string;
+  dependencies: string[];
+  communication: string;
+}
+
+export interface FarmKartEdge {
+  id: string;
+  from: string;
+  to: string;
+  kind: FarmKartEdgeKind;
+}
+
 export interface CodeLine {
   type: "code" | "comment" | "blank";
   text: string;

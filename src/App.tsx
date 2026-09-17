@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { revealSections, watchActiveSections } from "./animations/scrollAnimations.ts";
-import { ArchitecturePlayground } from "./components/architecture/ArchitecturePlayground.tsx";
 import { CustomCursor } from "./components/cursor/CustomCursor.tsx";
+import { FarmKart } from "./components/farmkart/FarmKart.tsx";
 import { Experience } from "./components/experience/Experience.tsx";
 import { Footer } from "./components/footer/Footer.tsx";
 import { Hero } from "./components/hero/Hero.tsx";
@@ -16,6 +16,7 @@ import { HowIThink } from "./components/sections/HowIThink.tsx";
 import { Metrics } from "./components/sections/Metrics.tsx";
 import { ProblemSet } from "./components/sections/ProblemSet.tsx";
 import { StackMap } from "./components/sections/StackMap.tsx";
+import { ClickFeedback } from "./components/system/ClickFeedback.tsx";
 import { SmoothScroll } from "./components/system/SmoothScroll.tsx";
 import { useReducedMotion } from "./hooks/useReducedMotion.ts";
 import { useGSAP } from "./utils/gsap.ts";
@@ -27,7 +28,7 @@ const trackedIds = [
   "work",
   "experience",
   "think",
-  "playground",
+  "farmkart",
   "code",
   "problems",
   "metrics",
@@ -41,8 +42,8 @@ const progressAlias: Record<string, string> = {
   work: "work",
   experience: "experience",
   think: "experience",
-  playground: "playground",
-  code: "playground",
+  farmkart: "farmkart",
+  code: "farmkart",
   problems: "expertise",
   metrics: "contact",
   contact: "contact",
@@ -81,6 +82,7 @@ export default function App() {
       </a>
       <SmoothScroll />
       <PageLoader />
+      <ClickFeedback />
       <CustomCursor />
       <div className="site-rail" aria-hidden="true">
         <span className="site-rail__mark">SYSTEM // HUMAN</span>
@@ -97,7 +99,7 @@ export default function App() {
         <Work />
         <Experience />
         <HowIThink />
-        <ArchitecturePlayground />
+        <FarmKart />
         <Code />
         <ProblemSet />
         <Metrics />

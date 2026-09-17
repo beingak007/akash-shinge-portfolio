@@ -1,0 +1,348 @@
+.farmkart {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  padding: calc(var(--nav-h) + 1rem) 3.2vw 1.2rem calc(var(--rail) + 2.6vw);
+  overflow: clip;
+  background: var(--bg);
+}
+
+.farmkart__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.farmkart__title {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+}
+
+.farmkart__sub,
+.farmkart__hint,
+.farmkart__lane,
+.farmkart__mark,
+.farmkart__runtime-label,
+.farmkart__caption,
+.farmkart__panel-kicker,
+.farmkart__meta,
+.farmkart__nav-btn {
+  font-family: var(--mono);
+  letter-spacing: 0.16em;
+}
+
+.farmkart__sub {
+  margin: 0.35rem 0 0;
+  font-size: 0.58rem;
+  color: var(--accent);
+}
+
+.farmkart__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.15rem 1rem;
+}
+
+.farmkart__nav-btn {
+  min-height: 1.8rem;
+  font-size: 0.58rem;
+  color: var(--ink-dim);
+}
+
+.farmkart__nav-btn span {
+  margin-right: 0.4rem;
+  color: var(--ink-faint);
+}
+
+.farmkart__nav-btn:hover,
+.farmkart__nav-btn.is-on {
+  color: var(--ink);
+}
+
+.farmkart__nav-btn.is-on span {
+  color: var(--accent);
+}
+
+.farmkart__tag {
+  margin: 1.4rem 0 0.55rem;
+  max-width: 22ch;
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 3.4vw, 2.8rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.farmkart__hint {
+  margin: 0 0 1rem;
+  font-size: 0.58rem;
+  color: var(--ink-faint);
+}
+
+.farmkart__board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 17.5rem;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.farmkart__stage {
+  position: relative;
+  overflow: auto;
+  min-height: 28rem;
+  border: 1px solid var(--line);
+  background: var(--bg-overlay);
+}
+
+.farmkart__grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: farmkart-grid 64s linear infinite;
+}
+
+.farmkart__canvas {
+  position: relative;
+  width: 100%;
+  min-width: 1120px;
+  aspect-ratio: 1680 / 880;
+}
+
+.farmkart__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.farmkart__runtime {
+  fill: rgba(212, 120, 58, 0.025);
+  stroke: rgba(212, 120, 58, 0.22);
+  stroke-dasharray: 3 5;
+  stroke-width: 1;
+}
+
+.farmkart__runtime-label,
+.farmkart__lane,
+.farmkart__mark,
+.farmkart__caption {
+  fill: var(--ink-faint);
+  font-size: 9px;
+}
+
+.farmkart__caption {
+  letter-spacing: 0.14em;
+}
+
+.farmkart__edge {
+  fill: none;
+  stroke: rgba(236, 231, 220, 0.2);
+  stroke-width: 1.05;
+}
+
+.farmkart__edge--async {
+  stroke: rgba(196, 92, 74, 0.42);
+}
+
+.farmkart__edge--data {
+  stroke: rgba(42, 125, 148, 0.38);
+}
+
+.farmkart__edge--runtime {
+  stroke: rgba(47, 111, 154, 0.34);
+}
+
+.farmkart__edge.is-dim {
+  opacity: 0.14;
+}
+
+.farmkart__edge.is-hot {
+  stroke: var(--accent);
+  stroke-width: 1.35;
+  opacity: 1;
+}
+
+.farmkart__packet {
+  fill: var(--accent);
+  pointer-events: none;
+}
+
+.farmkart__packet.is-dim {
+  opacity: 0.12;
+}
+
+.farmkart__node {
+  position: absolute;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 10.2rem;
+  min-height: 2.35rem;
+  padding: 0 0.7rem;
+  white-space: nowrap;
+  border: 1px solid rgba(11, 11, 10, 0.4);
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.28s var(--ease), box-shadow 0.28s var(--ease);
+}
+
+.farmkart__node:hover {
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.farmkart__node.is-on {
+  box-shadow: 0 0 0 1px var(--bg), 0 0 0 2px var(--accent);
+  z-index: 2;
+}
+
+.farmkart__node.is-dim {
+  opacity: 0.22;
+}
+
+.farmkart__panel {
+  min-height: 16rem;
+  padding: 1rem 1.05rem 1.15rem;
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+}
+
+.farmkart__panel-kicker {
+  margin: 0 0 0.55rem;
+  font-size: 0.58rem;
+  color: var(--accent);
+}
+
+.farmkart__panel h3 {
+  margin: 0 0 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+
+.farmkart__panel dl {
+  margin: 0;
+}
+
+.farmkart__panel div + div {
+  margin-top: 0.9rem;
+}
+
+.farmkart__panel dt {
+  margin-bottom: 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+}
+
+.farmkart__panel dd {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.farmkart__panel-idle {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: 0.92rem;
+}
+
+.farmkart__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.9rem;
+  font-size: 0.55rem;
+  color: var(--ink-faint);
+}
+
+.farmkart__meta p {
+  margin: 0;
+}
+
+.farmkart__meta span + span::before {
+  content: " · ";
+}
+
+@keyframes farmkart-grid {
+  to {
+    background-position: 48px 48px;
+  }
+}
+
+@media (max-width: 1099px) {
+  .farmkart {
+    padding: calc(var(--nav-h) + 0.8rem + var(--safe-top))
+      max(1.15rem, var(--safe-right)) calc(1.2rem + var(--safe-bottom))
+      max(1.15rem, var(--safe-left));
+  }
+
+  .farmkart__head {
+    flex-direction: column;
+  }
+
+  .farmkart__nav {
+    justify-content: flex-start;
+  }
+
+  .farmkart__board {
+    grid-template-columns: 1fr;
+  }
+
+  .farmkart__stage::after {
+    content: "SWIPE →";
+    position: sticky;
+    left: 0.7rem;
+    bottom: 0.55rem;
+    display: inline-block;
+    margin: 0 0 0.55rem 0.7rem;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    pointer-events: none;
+  }
+
+  .farmkart__panel {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .farmkart__tag {
+    max-width: none;
+    font-size: clamp(1.5rem, 8vw, 2.2rem);
+  }
+
+  .farmkart__node {
+    min-width: 8.6rem;
+    min-height: 2.15rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+
+  .farmkart__meta {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .farmkart__grid {
+    animation: none;
+  }
+}
