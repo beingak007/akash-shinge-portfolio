@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import {
-  moveCursorDot,
-  moveCursorFollower,
+  createCursorMover,
+  pressCursor,
   setCursorMode,
 } from "../../animations/cursorAnimations.ts";
 import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
@@ -51,17 +51,16 @@ export function CustomCursor() {
   }, [enabled]);
 
   useEffect(() => {
-    if (!enabled) {
+    if (!enabled || !dot.current || !follower.current) {
       return;
     }
 
+    const mover = createCursorMover(dot.current, follower.current);
+    let lastKey = "";
+
     const onMove = (event: PointerEvent) => {
-      if (!dot.current || !follower.current) {
-        return;
-      }
       root.current?.classList.add("is-on");
-      moveCursorDot(dot.current, event.clientX, event.clientY);
-      moveCursorFollower(follower.current, event.clientX, event.clientY);
+      mover.move(event.clientX, event.clientY);
     };
 
     const onOver = (event: PointerEvent) => {
@@ -69,14 +68,43 @@ export function CustomCursor() {
         return;
       }
       const next = readMode(event.target);
+      const key = `${next.mode}|${next.label ?? ""}`;
+      if (key === lastKey) {
+        return;
+      }
+      lastKey = key;
       setCursorMode(follower.current, label.current, next.mode, next.label);
     };
 
-    window.addEventListener("pointermove", onMove);
+    const onDown = () => {
+      if (follower.current) {
+        pressCursor(follower.current, true);
+      }
+    };
+
+    const onUp = () => {
+      if (follower.current) {
+        pressCursor(follower.current, false);
+      }
+    };
+
+    const onLeaveWindow = (event: PointerEvent) => {
+      if (!event.relatedTarget) {
+        root.current?.classList.remove("is-on");
+      }
+    };
+
+    window.addEventListener("pointermove", onMove, { passive: true });
     document.addEventListener("pointerover", onOver);
+    document.addEventListener("pointerout", onLeaveWindow);
+    window.addEventListener("pointerdown", onDown, { passive: true });
+    window.addEventListener("pointerup", onUp, { passive: true });
     return () => {
       window.removeEventListener("pointermove", onMove);
       document.removeEventListener("pointerover", onOver);
+      document.removeEventListener("pointerout", onLeaveWindow);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
     };
   }, [enabled]);
 

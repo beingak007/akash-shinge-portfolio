@@ -1,0 +1,42 @@
+.pt {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pt__panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--bg-overlay);
+}
+
+.pt__panel--accent {
+  background: linear-gradient(120deg, var(--accent-deep), var(--accent) 55%, var(--accent-hot));
+}
+
+.pt__copy {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.pt__kicker {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.28em;
+  color: var(--accent);
+}
+
+.pt__label {
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 8vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}

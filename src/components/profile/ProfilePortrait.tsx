@@ -1,8 +1,10 @@
 import { useRef } from "react";
-import { profile } from "../../data/profile.ts";
+import { photoSizes, profile } from "../../data/profile.ts";
 import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
+import { useMediaFx } from "../../hooks/useMediaFx.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { gsap, useGSAP } from "../../utils/gsap.ts";
+import { FxLayers } from "../media/FxLayers.tsx";
 import "./ProfilePortrait.css";
 
 type PortraitTreatment = "hero" | "about" | "nav" | "contact" | "card" | "leetcode";
@@ -21,6 +23,10 @@ export function ProfilePortrait({
   const root = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const desktop = useDesktopPointer();
+  const interactive = treatment !== "nav";
+  const image = src ?? profile.photo;
+  const size = photoSizes[image] ?? { width: 591, height: 942 };
+  useMediaFx(root, { tilt: 8, magnetic: 0.04, enabled: interactive });
 
   useGSAP(
     () => {
@@ -84,22 +90,23 @@ export function ProfilePortrait({
         frame.removeEventListener("pointerleave", reset);
       };
     },
-    { scope: root, dependencies: [reduced, desktop, treatment] },
+    { scope: root, dependencies: [reduced, desktop, treatment], revertOnUpdate: true },
   );
 
   return (
     <div
       ref={root}
-      className={`portrait portrait--${treatment} ${className}`.trim()}
+      className={`portrait portrait--${treatment}${interactive ? " fx" : ""} ${className}`.trim()}
       data-cursor="image"
       data-cursor-label="AKASH / ENGINEER"
+      data-fx={interactive ? "" : undefined}
     >
       <img
         data-portrait-img
-        src={src ?? profile.photo}
+        src={image}
         alt={`${profile.name}, ${profile.role}`}
-        width={treatment === "leetcode" ? 747 : 591}
-        height={treatment === "leetcode" ? 1024 : 942}
+        width={size.width}
+        height={size.height}
         sizes={
           treatment === "nav"
             ? "28px"
@@ -114,6 +121,7 @@ export function ProfilePortrait({
         fetchPriority={treatment === "hero" ? "high" : "auto"}
       />
       <span className="portrait__grain" aria-hidden="true" />
+      {interactive ? <FxLayers /> : null}
     </div>
   );
 }

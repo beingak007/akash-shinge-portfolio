@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { gsap, useGSAP } from "../../utils/gsap.ts";
+import { markSiteReady } from "../../utils/siteReady.ts";
 import "./PageLoader.css";
 
 export function PageLoader() {
@@ -11,6 +12,7 @@ export function PageLoader() {
   useGSAP(
     () => {
       const finish = () => {
+        markSiteReady();
         setDone(true);
       };
 
@@ -19,7 +21,7 @@ export function PageLoader() {
         return;
       }
 
-      const safety = window.setTimeout(finish, 1100);
+      const safety = window.setTimeout(finish, 1700);
       const init = root.current.querySelector("[data-loader-init]");
       const ready = root.current.querySelector("[data-loader-ready]");
 
@@ -34,7 +36,8 @@ export function PageLoader() {
         .fromTo(init, { opacity: 0 }, { opacity: 1, duration: 0.22 })
         .to(init, { opacity: 0, duration: 0.16 }, 0.48)
         .fromTo(ready, { opacity: 0 }, { opacity: 1, duration: 0.18 }, 0.5)
-        .to(root.current, { yPercent: -100, duration: 0.42, ease: "power3.inOut" }, 0.78);
+        .add(markSiteReady, 0.7)
+        .to(root.current, { yPercent: -100, duration: 0.6, ease: "power4.inOut" }, 0.72);
 
       return () => {
         window.clearTimeout(safety);

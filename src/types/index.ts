@@ -51,6 +51,8 @@ export interface Profile {
   firstName: string;
   lastName: string;
   role: string;
+  /** Second half of the hero role line. */
+  secondaryRole: string;
   headline: string;
   location: string;
   locationCountry: string;
@@ -87,6 +89,8 @@ export interface Experience {
   location: string;
   built: string;
   solved: string;
+  /** Technologies named in `built` / `solved` — never anything the role did not use. */
+  stack: string[];
   /**
    * Set when a date is known only approximately.
    * Update in src/data/experience.ts — do not invent dates.
@@ -105,14 +109,40 @@ export interface ProjectFlowNode {
   label: string;
 }
 
+export interface ProjectCoverNode {
+  id: string;
+  label: string;
+  /** Centre position in the 1600 × 1000 cover canvas. */
+  x: number;
+  y: number;
+  /** Fixed width for wide nodes (a topic spine, a UI layer). */
+  w?: number;
+  hub?: boolean;
+  /** Dashed, label-only annotation rather than a running component. */
+  ghost?: boolean;
+}
+
+export interface ProjectCover {
+  glow: { x: number; y: number };
+  nodes: ProjectCoverNode[];
+  edges: Array<[string, string]>;
+}
+
 export interface Project {
   id: string;
   index: string;
   name: string;
+  /** One line for the gallery card. */
+  summary: string;
   problem: string;
+  /** The hard parts of the design problem — framed as challenges, not results. */
+  challenges: string[];
   tech: string[];
   impact: string[];
   flow: ProjectFlowNode[];
+  accent: string;
+  cover: ProjectCover;
+  /** Real screenshot path. When null, the generated system cover is shown. */
   image: string | null;
   links: ProjectLink[];
   /**
@@ -138,6 +168,34 @@ export interface Technology {
   y: number;
   related: string[];
   color: string;
+}
+
+export type CapabilityGlyph =
+  | "backend"
+  | "frontend"
+  | "distributed"
+  | "microservices"
+  | "api"
+  | "database"
+  | "performance";
+
+export interface Capability {
+  id: string;
+  index: string;
+  title: string;
+  body: string;
+  tags: string[];
+  glyph: CapabilityGlyph;
+}
+
+export interface ProfileStat {
+  id: string;
+  value: number;
+  suffix?: string;
+  label: string;
+  detail: string;
+  /** Short segments for the stat's mini visual (label + share of the whole). */
+  segments: Array<{ label: string; value: number }>;
 }
 
 export interface Principle {

@@ -1,3 +1,9 @@
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 :root {
   --bg: #0b0b0a;
   --bg-raised: #121210;
@@ -10,11 +16,25 @@
   --line-strong: rgba(236, 231, 220, 0.24);
   --accent: #d4783a;
   --accent-deep: #b45e26;
+  --accent-hot: #f3b27a;
   --accent-soft: rgba(212, 120, 58, 0.16);
+  /* Secondary accent: used in gradients and light, never as a fill on its own. */
+  --accent-cool: #6cc5b8;
+  --accent-cool-soft: rgba(108, 197, 184, 0.14);
   --grid: rgba(236, 231, 220, 0.05);
   --grid-accent: rgba(212, 120, 58, 0.08);
   --danger: #c45c4a;
   --focus: #f0c08a;
+  --glass: rgba(20, 19, 17, 0.56);
+  --glass-strong: rgba(13, 12, 11, 0.86);
+  --glass-line: rgba(236, 231, 220, 0.14);
+  --glass-blur: 18px;
+  --gradient-ember: linear-gradient(
+    100deg,
+    var(--accent) 0%,
+    var(--accent-hot) 46%,
+    var(--accent-cool) 100%
+  );
   --serif: "Instrument Serif", "Iowan Old Style", "Times New Roman", serif;
   --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, monospace;
@@ -28,6 +48,7 @@
   --rail: 3.25rem;
   --nav-h: 4.5rem;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
   --max: 1440px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);

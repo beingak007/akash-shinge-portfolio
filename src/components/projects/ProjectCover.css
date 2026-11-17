@@ -1,0 +1,93 @@
+.cover {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: 50% 50%;
+}
+
+.cover__numeral {
+  font-family: var(--serif);
+  font-size: 520px;
+  letter-spacing: -0.06em;
+  fill: none;
+  stroke: rgba(236, 231, 220, 0.09);
+  stroke-width: 1.4;
+}
+
+.cover__edge {
+  fill: none;
+  stroke: rgba(236, 231, 220, 0.2);
+  stroke-width: 2;
+}
+
+.cover__edge.is-ghost {
+  stroke-dasharray: 6 10;
+  stroke: rgba(236, 231, 220, 0.16);
+}
+
+.cover__packet {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 2 26;
+  animation: cover-flow 2.6s linear infinite;
+}
+
+.fx.is-hot .cover__packet {
+  stroke-width: 4;
+  animation-duration: 1.1s;
+}
+
+@keyframes cover-flow {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+.cover__node rect {
+  fill: #0e0d0c;
+  stroke: rgba(236, 231, 220, 0.28);
+  stroke-width: 1.5;
+}
+
+.cover__node.is-hub rect {
+  stroke: var(--cover-accent);
+  stroke-width: 2;
+}
+
+.cover__node.is-ghost rect {
+  fill: rgba(14, 13, 12, 0.6);
+  stroke-dasharray: 6 8;
+  stroke: rgba(236, 231, 220, 0.22);
+}
+
+.cover__node .cover__pip {
+  fill: var(--cover-accent);
+  stroke: none;
+}
+
+.cover__node text {
+  font-family: var(--mono);
+  font-size: 20px;
+  letter-spacing: 0.14em;
+  fill: #ece7dc;
+}
+
+.cover__node.is-ghost text {
+  fill: rgba(236, 231, 220, 0.55);
+}
+
+.cover__chrome text {
+  font-family: var(--mono);
+  font-size: 22px;
+  letter-spacing: 0.22em;
+  fill: rgba(236, 231, 220, 0.62);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover__packet {
+    animation: none;
+  }
+}

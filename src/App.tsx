@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { revealSections, watchActiveSections } from "./animations/scrollAnimations.ts";
+import {
+  revealHeadings,
+  revealMasks,
+  revealSections,
+  watchActiveSections,
+} from "./animations/scrollAnimations.ts";
 import { CustomCursor } from "./components/cursor/CustomCursor.tsx";
 import { FarmKart } from "./components/farmkart/FarmKart.tsx";
 import { Experience } from "./components/experience/Experience.tsx";
@@ -10,13 +15,16 @@ import { FloatingNav } from "./components/navigation/FloatingNav.tsx";
 import { SectionProgress } from "./components/progress/SectionProgress.tsx";
 import { Work } from "./components/projects/Work.tsx";
 import { About } from "./components/sections/About.tsx";
+import { Capabilities } from "./components/sections/Capabilities.tsx";
 import { Code } from "./components/sections/Code.tsx";
 import { Contact } from "./components/sections/Contact.tsx";
 import { HowIThink } from "./components/sections/HowIThink.tsx";
 import { Metrics } from "./components/sections/Metrics.tsx";
 import { ProblemSet } from "./components/sections/ProblemSet.tsx";
 import { StackMap } from "./components/sections/StackMap.tsx";
+import { Ambient } from "./components/system/Ambient.tsx";
 import { ClickFeedback } from "./components/system/ClickFeedback.tsx";
+import { PageTransition } from "./components/system/PageTransition.tsx";
 import { SmoothScroll } from "./components/system/SmoothScroll.tsx";
 import { useReducedMotion } from "./hooks/useReducedMotion.ts";
 import { useGSAP } from "./utils/gsap.ts";
@@ -24,6 +32,7 @@ import { useGSAP } from "./utils/gsap.ts";
 const trackedIds = [
   "hero",
   "about",
+  "services",
   "expertise",
   "work",
   "experience",
@@ -35,9 +44,19 @@ const trackedIds = [
   "contact",
 ] as const;
 
+/** Sections without their own nav entry light up the nearest one. */
+const navAlias: Record<string, string> = {
+  services: "expertise",
+  think: "experience",
+  code: "experience",
+  problems: "expertise",
+  metrics: "contact",
+};
+
 const progressAlias: Record<string, string> = {
   hero: "hero",
   about: "hero",
+  services: "expertise",
   expertise: "expertise",
   work: "work",
   experience: "experience",
@@ -51,28 +70,17 @@ const progressAlias: Record<string, string> = {
 
 export default function App() {
   const reduced = useReducedMotion();
-  const [activeId, setActiveId] = useState("hero");
+  const [sectionId, setSectionId] = useState("hero");
+  const activeId = navAlias[sectionId] ?? sectionId;
 
   useGSAP(
     () => {
       revealSections(document.body, reduced);
-      watchActiveSections([...trackedIds], (id) => {
-        if (id === "think" || id === "code") {
-          setActiveId("experience");
-          return;
-        }
-        if (id === "problems") {
-          setActiveId("expertise");
-          return;
-        }
-        if (id === "metrics") {
-          setActiveId("contact");
-          return;
-        }
-        setActiveId(id);
-      });
+      revealHeadings(document.body, reduced);
+      revealMasks(document.body, reduced);
+      watchActiveSections([...trackedIds], setSectionId);
     },
-    { dependencies: [reduced] },
+    { dependencies: [reduced], revertOnUpdate: true },
   );
 
   return (
@@ -81,7 +89,9 @@ export default function App() {
         Skip to content
       </a>
       <SmoothScroll />
+      <Ambient sectionId={sectionId} />
       <PageLoader />
+      <PageTransition />
       <ClickFeedback />
       <CustomCursor />
       <div className="site-rail" aria-hidden="true">
@@ -91,10 +101,11 @@ export default function App() {
         <span />
       </div>
       <FloatingNav activeId={activeId} />
-      <SectionProgress activeId={progressAlias[activeId] ?? activeId} />
+      <SectionProgress activeId={progressAlias[sectionId] ?? sectionId} />
       <main id="main">
         <Hero />
         <About />
+        <Capabilities />
         <StackMap />
         <Work />
         <Experience />

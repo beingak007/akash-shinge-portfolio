@@ -3,7 +3,10 @@ import { drawTimeline } from "../../animations/scrollAnimations.ts";
 import { experiences } from "../../data/experience.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { useGSAP } from "../../utils/gsap.ts";
+import { TimelineCard } from "./TimelineCard.tsx";
 import "./Experience.css";
+
+const progression = [...experiences].reverse().map((item) => item.role);
 
 export function Experience() {
   const root = useRef<HTMLElement>(null);
@@ -15,49 +18,38 @@ export function Experience() {
         drawTimeline(root.current, reduced);
       }
     },
-    { scope: root, dependencies: [reduced] },
+    { scope: root, dependencies: [reduced], revertOnUpdate: true },
   );
 
   return (
     <section ref={root} className="section experience" id="experience">
       <div className="section__head">
-        <p className="kicker">04 — EXPERIENCE</p>
+        <p className="kicker">05 — EXPERIENCE</p>
         <p className="kicker">ENGINEERING LOG</p>
       </div>
-      <h2 className="display experience__title" data-reveal>
-        Roles held. Systems owned.
-      </h2>
+      <div className="experience__intro">
+        <h2 className="display experience__title" data-split>
+          Roles held. <em>Systems owned.</em>
+        </h2>
+        {progression.length > 1 ? (
+          <ol className="experience__path" aria-label="Career progression" data-reveal>
+            {progression.map((role, index) => (
+              <li key={role}>
+                {role}
+                {index < progression.length - 1 ? <i aria-hidden="true">→</i> : null}
+              </li>
+            ))}
+          </ol>
+        ) : null}
+      </div>
 
       <div className="timeline">
         <div className="timeline__line" aria-hidden="true">
           <span data-timeline-progress />
+          <b className="timeline__head" data-timeline-head />
         </div>
         {experiences.map((item) => (
-          <article
-            key={item.id}
-            className="timeline__item"
-            data-timeline-item
-          >
-            <p className="timeline__year">{item.year}</p>
-            <div>
-              <p className="timeline__company">{item.company}</p>
-              <h3 className="timeline__role">{item.role}</h3>
-              <p className="timeline__period">
-                {item.period} · {item.location}
-              </p>
-              <p>
-                <span className="timeline__label">WHAT I BUILT</span>
-                {item.built}
-              </p>
-              <p>
-                <span className="timeline__label">WHAT I SOLVED</span>
-                {item.solved}
-              </p>
-              {item.dateNote ? (
-                <p className="timeline__note">{item.dateNote}</p>
-              ) : null}
-            </div>
-          </article>
+          <TimelineCard key={item.id} item={item} />
         ))}
       </div>
     </section>

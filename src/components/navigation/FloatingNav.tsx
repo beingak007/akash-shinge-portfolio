@@ -14,6 +14,8 @@ interface FloatingNavProps {
 
 export function FloatingNav({ activeId }: FloatingNavProps) {
   const root = useRef<HTMLElement>(null);
+  const list = useRef<HTMLElement>(null);
+  const indicator = useRef<HTMLSpanElement>(null);
   const reduced = useReducedMotion();
   const desktop = useDesktopPointer();
   const [open, setOpen] = useState(false);
@@ -69,13 +71,82 @@ export function FloatingNav({ activeId }: FloatingNavProps) {
         });
       };
     },
-    { scope: root, dependencies: [reduced, desktop] },
+    { scope: root, dependencies: [reduced, desktop], revertOnUpdate: true },
   );
 
-  const onNav = (id: string) => {
+  // Sliding indicator: follows the active section, previews the hovered link.
+  useGSAP(
+    () => {
+      const bar = indicator.current;
+      const active = list.current?.querySelector<HTMLElement>(".nav__link.is-active");
+      if (!bar) {
+        return;
+      }
+      if (!desktop || !active) {
+        gsap.to(bar, { opacity: 0, duration: 0.3, overwrite: "auto" });
+        return;
+      }
+      gsap.to(bar, {
+        x: active.offsetLeft,
+        y: active.offsetTop + active.offsetHeight + 4,
+        width: active.offsetWidth,
+        opacity: 1,
+        duration: reduced ? 0 : 0.7,
+        ease: "expo.out",
+        overwrite: "auto",
+      });
+    },
+    { scope: root, dependencies: [activeId, desktop, reduced, compact] },
+  );
+
+  const previewIndicator = (link: HTMLElement | null) => {
+    const bar = indicator.current;
+    const target = link ?? list.current?.querySelector<HTMLElement>(".nav__link.is-active") ?? null;
+    if (!bar || !desktop) {
+      return;
+    }
+    if (!target) {
+      gsap.to(bar, { opacity: 0, duration: 0.3, overwrite: "auto" });
+      return;
+    }
+    gsap.to(bar, {
+      x: target.offsetLeft,
+      y: target.offsetTop + target.offsetHeight + 4,
+      width: target.offsetWidth,
+      opacity: 1,
+      duration: reduced ? 0 : 0.5,
+      ease: "expo.out",
+      overwrite: "auto",
+    });
+  };
+
+  // Mobile menu: links cascade in when it opens.
+  useGSAP(
+    () => {
+      if (!open || reduced || desktop || !list.current) {
+        return;
+      }
+      gsap.fromTo(
+        list.current,
+        { clipPath: "inset(0% 0% 100% 0%)" },
+        { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "expo.out", clearProps: "clipPath" },
+      );
+      gsap.from(list.current.querySelectorAll(".nav__link"), {
+        y: 18,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power3.out",
+        stagger: 0.045,
+        delay: 0.08,
+      });
+    },
+    { scope: root, dependencies: [open, reduced, desktop] },
+  );
+
+  const onNav = (id: string, label?: string) => {
     setOpen(false);
     setHidden(false);
-    scrollToSection(id, reduced);
+    scrollToSection(id, reduced, label);
   };
 
   return (
@@ -110,7 +181,16 @@ export function FloatingNav({ activeId }: FloatingNavProps) {
         {open ? "CLOSE" : "MENU"}
       </button>
 
-      <nav id="site-nav" className={`nav__list${open ? " is-open" : ""}`} aria-label="Primary">
+      <nav
+        ref={list}
+        id="site-nav"
+        className={`nav__list${open ? " is-open" : ""}`}
+        aria-label="Primary"
+        onPointerLeave={() => {
+          previewIndicator(null);
+        }}
+      >
+        <span ref={indicator} className="nav__indicator" aria-hidden="true" />
         {navigation.map((item) => (
           <a
             key={item.id}
@@ -118,9 +198,13 @@ export function FloatingNav({ activeId }: FloatingNavProps) {
             href={item.href}
             data-cursor="open"
             data-magnetic
+            aria-current={activeId === item.id ? "true" : undefined}
+            onPointerEnter={(event) => {
+              previewIndicator(event.currentTarget);
+            }}
             onClick={(event) => {
               event.preventDefault();
-              onNav(item.id);
+              onNav(item.id, item.label);
             }}
           >
             <span className="nav__index">{item.index}</span>

@@ -6,7 +6,8 @@ import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import type { Technology } from "../../types/index.ts";
 import { findTechnology, relatedSet } from "../../utils/techGraph.ts";
-import { useGSAP } from "../../utils/gsap.ts";
+import { gsap, useGSAP } from "../../utils/gsap.ts";
+import { SkillMarquee } from "./SkillMarquee.tsx";
 import "./StackMap.css";
 
 function nodeClass(tech: Technology, activeId: string | null): string {
@@ -38,9 +39,23 @@ export function StackMap() {
       if (!map.current || reduced || !desktop) {
         return;
       }
+      gsap.from(map.current.querySelectorAll(".stack-map__node"), {
+        opacity: 0,
+        scale: 0.6,
+        duration: 0.7,
+        ease: "back.out(1.8)",
+        stagger: { each: 0.035, from: "start" },
+        scrollTrigger: { trigger: map.current, start: "top 75%", once: true },
+      });
+      gsap.from(map.current.querySelectorAll(".stack-map__cat"), {
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.08,
+        scrollTrigger: { trigger: map.current, start: "top 75%", once: true },
+      });
       return bindTilt3d(map.current, 7);
     },
-    { dependencies: [reduced, desktop] },
+    { dependencies: [reduced, desktop], revertOnUpdate: true },
   );
 
   const lines = useMemo(() => {
@@ -68,12 +83,15 @@ export function StackMap() {
   return (
     <section className="section stack" id="expertise">
       <div className="section__head">
-        <p className="kicker">02 — EXPERTISE</p>
+        <p className="kicker">03 — TECHNICAL SKILLS</p>
         <p className="kicker">TECH STACK MAP</p>
       </div>
-      <h2 className="display stack__title" data-reveal>
-        An architecture, not a list.
+      <h2 className="display stack__title" data-split>
+        An architecture, <em>not a list.</em>
       </h2>
+
+      <SkillMarquee />
+
       <p className="lede" data-reveal>
         Hover a technology to see the path it actually travels — services, stores,
         messages, and the ideas that keep them together.

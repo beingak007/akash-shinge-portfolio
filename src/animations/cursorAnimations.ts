@@ -4,29 +4,38 @@ import { gsap } from "../utils/gsap.ts";
 const labels: Record<CursorMode, string> = {
   default: "",
   hover: "",
-  view: "VIEW CASE STUDY →",
+  view: "VIEW →",
   open: "OPEN",
   image: "AKASH / ENGINEER",
   drag: "DRAG",
   magnetic: "",
 };
 
-export function moveCursorDot(dot: HTMLElement, x: number, y: number): void {
-  gsap.set(dot, { x, y });
+export interface CursorMover {
+  move: (x: number, y: number) => void;
 }
 
-export function moveCursorFollower(
-  follower: HTMLElement,
-  x: number,
-  y: number,
-): void {
-  gsap.to(follower, {
-    x,
-    y,
-    duration: 0.45,
-    ease: "power3.out",
-    overwrite: "auto",
-  });
+/** quickTo-based movers: one tween each, retargeted per event instead of re-created. */
+export function createCursorMover(dot: HTMLElement, follower: HTMLElement): CursorMover {
+  const dotX = gsap.quickTo(dot, "x", { duration: 0.08, ease: "power2.out" });
+  const dotY = gsap.quickTo(dot, "y", { duration: 0.08, ease: "power2.out" });
+  const followX = gsap.quickTo(follower, "x", { duration: 0.5, ease: "power3.out" });
+  const followY = gsap.quickTo(follower, "y", { duration: 0.5, ease: "power3.out" });
+  return {
+    move: (x, y) => {
+      dotX(x);
+      dotY(y);
+      followX(x);
+      followY(y);
+    },
+  };
+}
+
+export function scaleFor(mode: CursorMode): number {
+  if (mode === "default") {
+    return 1;
+  }
+  return mode === "view" || mode === "image" ? 2.15 : 1.7;
 }
 
 export function setCursorMode(
@@ -35,21 +44,30 @@ export function setCursorMode(
   mode: CursorMode,
   customLabel?: string,
 ): void {
-  const wide = mode === "view" || mode === "image";
-  const scale = mode === "default" ? 1 : wide ? 2.15 : 1.7;
   const text = customLabel ?? labels[mode];
 
   gsap.to(follower, {
-    scale,
-    duration: 0.28,
+    scale: scaleFor(mode),
+    duration: 0.32,
     ease: "power3.out",
     overwrite: "auto",
   });
 
+  follower.dataset.mode = mode;
   label.textContent = text;
   gsap.to(label, {
     opacity: text ? 1 : 0,
     duration: 0.2,
+    overwrite: "auto",
+  });
+}
+
+export function pressCursor(follower: HTMLElement, pressed: boolean): void {
+  const base = scaleFor((follower.dataset.mode as CursorMode | undefined) ?? "default");
+  gsap.to(follower, {
+    scale: pressed ? base * 0.78 : base,
+    duration: pressed ? 0.14 : 0.4,
+    ease: pressed ? "power2.out" : "elastic.out(1, 0.5)",
     overwrite: "auto",
   });
 }

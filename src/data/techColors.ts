@@ -18,6 +18,7 @@ export const techColors = {
   k8s: "#326ce5",
   cicd: "#8b9cff",
   gitlab: "#fc6d26",
+  git: "#f05032",
   distributed: "#d4783a",
   "system-design": "#c9a227",
   eda: "#c9a227",

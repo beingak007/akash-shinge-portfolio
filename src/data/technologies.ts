@@ -161,7 +161,15 @@ const catalog: Array<Omit<Technology, "color">> = [
     category: "DEVOPS",
     x: 900,
     y: 340,
-    related: ["cicd", "docker"],
+    related: ["cicd", "docker", "git"],
+  },
+  {
+    id: "git",
+    name: "Git",
+    category: "DEVOPS",
+    x: 900,
+    y: 430,
+    related: ["gitlab", "cicd"],
   },
   {
     id: "distributed",
@@ -288,3 +296,19 @@ export const playgroundEdges: PlaygroundEdge[] = [
   { id: "e8", from: "service-a", to: "mysql" },
   { id: "e9", from: "service-b", to: "cassandra" },
 ];
+
+/** The core skills called out in the skills marquee, in display order. */
+export const coreSkillIds = [
+  "java",
+  "spring-boot",
+  "microservices",
+  "kafka",
+  "react",
+  "javascript",
+  "mysql",
+  "cassandra",
+  "docker",
+  "git",
+  "rest",
+  "system-design",
+] as const;

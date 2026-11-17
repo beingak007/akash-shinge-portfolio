@@ -3,94 +3,265 @@
   overflow: clip;
 }
 
-.work__intro {
-  padding: 5rem 5vw 2rem calc(var(--rail) + 5vw);
-}
-
-.work__title {
-  margin: 0.6rem 0 1rem;
-  font-size: clamp(3rem, 8vw, 7rem);
+.work__pin {
+  position: relative;
 }
 
 .work__track {
   display: flex;
+  align-items: center;
+  gap: 4vw;
   width: max-content;
+  padding: 0 6vw 0 calc(var(--rail) + 5vw);
 }
 
-.project {
+/* ---------- intro / outro panels ---------- */
+
+.work__intro {
+  flex: 0 0 auto;
+  width: min(30vw, 440px);
+}
+
+.work__title {
+  margin: 0.7rem 0 1.2rem;
+  font-size: clamp(3rem, 7.4vw, 7.4rem);
+}
+
+.work__title em,
+.work__outro-title em {
+  font-style: italic;
+  background: var(--gradient-ember);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-right: 0.06em;
+}
+
+.work__hint {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 2.2rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  color: var(--ink-dim);
+}
+
+.work__hint i {
+  position: relative;
+  display: block;
+  width: 4.5rem;
+  height: 1px;
+  overflow: hidden;
+  background: var(--line-strong);
+}
+
+.work__hint i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateX(-100%);
+  animation: work-hint 1.8s var(--ease-io) infinite;
+}
+
+@keyframes work-hint {
+  60%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.work__outro {
+  flex: 0 0 auto;
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(280px, 1.1fr);
-  gap: 2.5rem;
-  width: 100%;
-  min-width: min(100vw, 100%);
-  min-height: 86svh;
-  padding: 1.5rem 5vw 4rem calc(var(--rail) + 5vw);
-  border-top: 1px solid var(--line);
+  justify-items: start;
+  gap: 1.3rem;
+  width: min(34vw, 480px);
 }
 
-.project__index {
-  margin: 0 0 0.8rem;
+.work__outro-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 4.6vw, 4.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.work__outro-note {
+  margin: 0;
+  max-width: 24rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  line-height: 1.7;
+  color: var(--ink-faint);
+}
+
+/* ---------- cards ---------- */
+
+.work-card {
+  flex: 0 0 auto;
+  display: grid;
+  gap: 1.3rem;
+  width: min(62vw, 1020px);
+}
+
+.work-card__frame {
+  display: block;
+  width: 100%;
+  height: min(58svh, 36vw);
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  cursor: pointer;
+}
+
+.work-card__frame .cover {
+  position: absolute;
+  inset: 0 -6%;
+  width: 112%;
+}
+
+.work-card__body {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.work-card__index {
+  margin: 0.35rem 0 0;
   font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   color: var(--accent);
 }
 
-.project__name {
-  margin: 0 0 1rem;
+.work-card__index span {
+  margin-left: 0.35rem;
+  color: var(--ink-faint);
+}
+
+.work-card__name {
+  margin: 0 0 0.6rem;
   font-family: var(--serif);
-  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  font-size: clamp(2rem, 3.4vw, 3.4rem);
   font-weight: 400;
-  letter-spacing: -0.04em;
   line-height: 0.95;
+  letter-spacing: -0.035em;
 }
 
-.project__problem {
-  max-width: 36rem;
+.work-card__summary {
+  margin: 0;
+  max-width: 34rem;
   color: var(--ink-soft);
+  font-size: 0.98rem;
 }
 
-.project__meta {
-  margin: 1rem 0 0;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
+.work-card__side {
+  display: grid;
+  justify-items: end;
+  gap: 1rem;
 }
 
-.project__meta span {
-  display: block;
-  margin-bottom: 0.25rem;
-  color: var(--ink-faint);
-  letter-spacing: 0.16em;
-}
-
-.project__note {
-  margin-top: 1.2rem;
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  color: var(--ink-faint);
-}
-
-.project__links {
+.work-card__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1.2rem;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.project__visual {
-  display: grid;
-  place-items: center;
-  min-height: 280px;
-  border: 1px solid var(--line);
-  background:
-    linear-gradient(to right, var(--grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-  background-size: 40px 40px;
-  transform-style: preserve-3d;
-  will-change: transform;
+.work-card__open {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  color: var(--ink);
 }
+
+.work-card__open::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.55rem;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0.3);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease);
+}
+
+.work-card__open span {
+  display: inline-block;
+  color: var(--accent);
+  transition: rotate 0.45s var(--ease);
+}
+
+.work-card:hover .work-card__open::after,
+.work-card__open:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.work-card:hover .work-card__open span,
+.work-card__open:focus-visible span {
+  rotate: 90deg;
+}
+
+/* ---------- progress ---------- */
+
+.work__progress {
+  position: absolute;
+  left: calc(var(--rail) + 5vw);
+  right: 6vw;
+  bottom: 2.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-dim);
+}
+
+.work__count span {
+  color: var(--ink);
+}
+
+.work__rail {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.work__rail span {
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-ember);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* Pinned desktop layout: exactly one viewport tall. */
+@media (min-width: 1100px) {
+  .work__pin {
+    display: flex;
+    align-items: center;
+    height: 100svh;
+    padding-top: 3.5rem;
+  }
+}
+
+/* ---------- flow diagram (used in the modal) ---------- */
 
 .project-flow,
 .project-flow__row,
@@ -98,68 +269,110 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.55rem;
 }
 
 .project-flow {
-  flex-direction: column;
-  padding: 2rem 1rem;
+  padding: 0.4rem 0;
 }
 
 .project-flow__node {
   display: inline-flex;
-  min-height: 2.2rem;
+  align-items: center;
+  min-height: 2.1rem;
   padding: 0 0.75rem;
   border: 1px solid var(--line-strong);
   background: var(--bg);
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   letter-spacing: 0.14em;
 }
 
 .project-flow__line {
-  width: 1px;
-  height: 1.4rem;
-  background: var(--accent);
-  transform-origin: top center;
+  width: 1.2rem;
+  height: 1px;
+  background: var(--pm-accent, var(--accent));
+  transform-origin: left center;
 }
 
 .project-flow__fork {
+  flex-direction: column;
   align-items: flex-start;
 }
 
 .project-flow__col {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 0.55rem;
 }
 
+/* ---------- stacked layout (touch, tablet, reduced motion) ---------- */
+
 @media (max-width: 1099px) {
-  .work__intro,
-  .project {
-    padding-left: max(1.15rem, var(--safe-left));
-    padding-right: max(1.15rem, var(--safe-right));
+  .work {
+    padding: 4.2rem 0 3rem;
   }
 
   .work__track {
-    display: block;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3.6rem;
+    width: 100%;
+    padding: 0 max(1.15rem, var(--safe-right)) 0 max(1.15rem, var(--safe-left));
+  }
+
+  .work__intro,
+  .work__outro,
+  .work-card {
     width: 100%;
   }
 
   .work__title {
-    font-size: clamp(2.4rem, 12vw, 4.6rem);
+    font-size: clamp(2.8rem, 13vw, 4.8rem);
   }
 
-  .project {
+  .work-card__frame {
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+
+  .work-card__frame .cover {
+    inset: 0;
     width: 100%;
-    min-height: auto;
-    grid-template-columns: 1fr;
-    padding-top: 2.2rem;
-    padding-bottom: 2.2rem;
   }
 
-  .project__visual {
-    min-height: 220px;
+  .work-card__body {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+
+  .work-card__side {
+    justify-items: start;
+  }
+
+  .work-card__tags {
+    justify-content: flex-start;
+  }
+
+  .work__progress {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (min-width: 1100px) {
+  .work__pin {
+    height: auto;
+    padding: 6rem 0 4rem;
+  }
+
+  .work__track {
+    flex-wrap: wrap;
+    width: auto;
+    row-gap: 4rem;
+  }
+
+  .work__progress {
+    display: none;
   }
 }

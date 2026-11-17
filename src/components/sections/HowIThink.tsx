@@ -13,7 +13,7 @@ export function HowIThink() {
         <p className="kicker">HOW I THINK</p>
         <p className="kicker">MANIFESTO</p>
       </div>
-      <h2 className="display think__title" data-reveal>
+      <h2 className="display think__title" data-split>
         An engineering stance.
       </h2>
       <ul className="think__list">

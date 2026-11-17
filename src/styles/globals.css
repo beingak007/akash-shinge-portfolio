@@ -50,6 +50,17 @@ main {
   overflow-x: clip;
 }
 
+/* Content sits above the fixed ambient layer (gradient light + grain). */
+main,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+body.is-modal-open {
+  overflow: hidden;
+}
+
 img,
 svg {
   display: block;
@@ -234,6 +245,134 @@ a {
 
 .mono {
   font-family: var(--mono);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 1.9rem;
+  padding: 0 0.65rem;
+  border: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.chip::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: var(--chip-dot, var(--accent));
+}
+
+.text-ember {
+  background: var(--gradient-ember);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/*
+ * While a heading is split, each word is its own transformed box, so a parent
+ * <em>'s background-clip:text no longer reaches the glyphs. The words carry
+ * the gradient themselves until the split is reverted.
+ */
+.display em .split-word {
+  background: var(--gradient-ember);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-right: 0.06em;
+}
+
+.display em:has(.split-word) {
+  background: none;
+}
+
+/* Split-text masks for scroll-triggered typography. */
+.split-line {
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+/*
+ * Tactile feedback. Uses the individual `translate` / `rotate` properties so it
+ * composes with GSAP-driven `transform` (tilt, magnetic) instead of fighting it.
+ */
+.is-buzzing {
+  animation: buzz 0.28s cubic-bezier(0.3, 0.7, 0.4, 1) both;
+}
+
+@keyframes buzz {
+  0% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  16% {
+    translate: -1.4px 0.5px;
+    rotate: -0.35deg;
+  }
+  34% {
+    translate: 1.2px -0.5px;
+    rotate: 0.28deg;
+  }
+  52% {
+    translate: -0.7px 0.3px;
+    rotate: -0.16deg;
+  }
+  72% {
+    translate: 0.35px 0;
+    rotate: 0.06deg;
+  }
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+}
+
+.tap-ripple {
+  position: fixed;
+  z-index: 85;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: tap-ripple 0.5s var(--ease) forwards;
+}
+
+@keyframes tap-ripple {
+  from {
+    opacity: 0.75;
+    transform: scale(0.2);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1);
+  }
 }
 
 code {

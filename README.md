@@ -30,15 +30,36 @@ Edit files in `src/data/` only:
 - `profile.ts` — name, LinkedIn, LeetCode, GitHub, email, canonical URL
 - `leetcode.ts` — accepted counts from the public beingak007 profile
 - `experience.ts` — roles and dates (do not invent missing dates)
-- `projects.ts` — add GitHub / live / case-study URLs when they exist
-- `technologies.ts` — stack map and architecture playground
+- `projects.ts` — add GitHub / live / case-study URLs when they exist. Each
+  project's `cover` lays out its generated preview (1600 × 1000 canvas); set
+  `image` to a real screenshot path to replace it. `challenges` describe what
+  makes the design hard, not results.
+- `capabilities.ts` — the "What I do" disciplines
+- `stats.ts` — About-section numbers, derived from `leetcode.ts`,
+  `technologies.ts`, and `experience.ts` (nothing typed in by hand)
+- `technologies.ts` — stack map, architecture playground, and the
+  `coreSkillIds` shown in the skills marquee
 
 Portraits:
 
-- `public/profile.jpg` — café photo (hero, about, nav, contact)
-- `public/profile-leetcode.jpg` — second photo (LeetCode section)
+- `public/profile.jpg` — café photo (nav, contact, social share image)
+- `public/profile-field.jpg` — golden-hour close-up (About)
+- `public/profile-countryside.jpg` — golden-hour full length (LeetCode section)
 
-Email stays `null` until you add it.
+Add new portraits to `photoSizes` in `profile.ts` with their pixel size.
+
+Email stays `null` until you add it. While it is `null`, the big Contact CTA
+opens LinkedIn; once set, it becomes a `mailto:` link with a copy button.
+
+## Motion and interaction
+
+- `src/animations/mediaFx.ts` — the shared image interaction (tilt, magnetic
+  drift, pointer light, animated border, press ripple, distortion pulse).
+  Add `className="fx"` + `<FxLayers />` and call `useMediaFx(ref)`.
+- `[data-split]` on a heading gives it the scroll-triggered line reveal.
+- `src/utils/haptics.ts` — short Vibration API ticks (Android browsers only;
+  everything else gets the visual buzz).
+- Everything respects `prefers-reduced-motion`.
 
 ## Search (Google)
 

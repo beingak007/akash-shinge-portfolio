@@ -1,57 +1,55 @@
 import { useEffect } from "react";
-import {
-  spawnClickBurst,
-  strikeElement,
-  vibrateViewport,
-} from "../../animations/clickStrike.ts";
+import { buzz, spawnTapRipple } from "../../animations/clickStrike.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
-import { vibrateDevice } from "../../utils/haptics.ts";
-import "./ClickFeedback.css";
+import { haptic } from "../../utils/haptics.ts";
 
-const HIT = "button, a[href], [data-vibrate], [data-cursor], [data-magnetic]";
+/** Interactive targets that earn feedback. Blank page clicks get none. */
+const HIT = "button, a[href], [role='button'], [data-vibrate], [data-fx]";
 const SKIP = "input, textarea, select, .skip-link, [data-no-vibrate]";
 
 export function ClickFeedback() {
   const reduced = useReducedMotion();
 
   useEffect(() => {
-    let last = 0;
-    const onDown = (event: Event) => {
-      const pointer = event as PointerEvent | MouseEvent;
-      if ("button" in pointer && pointer.button !== 0) {
+    const target = (event: Event): HTMLElement | null => {
+      const raw = event.target instanceof Element ? event.target : null;
+      if (!raw || raw.closest(SKIP)) {
+        return null;
+      }
+      const hit = raw.closest(HIT);
+      return hit instanceof HTMLElement ? hit : null;
+    };
+
+    const onDown = (event: PointerEvent) => {
+      if (event.button !== 0) {
         return;
       }
-      const now = performance.now();
-      if (now - last < 50) {
+      const hit = target(event);
+      if (!hit || reduced) {
         return;
       }
-      last = now;
-
-      const raw = event.target instanceof Element ? event.target : document.body;
-      if (raw.closest(SKIP)) {
-        return;
+      // Media frames ([data-fx]) draw their own ripple and press state.
+      if (!hit.closest("[data-fx]")) {
+        spawnTapRipple(event.clientX, event.clientY);
       }
-
-      vibrateDevice();
-      vibrateViewport();
-
-      if (!reduced) {
-        spawnClickBurst(
-          "clientX" in pointer ? pointer.clientX : 0,
-          "clientY" in pointer ? pointer.clientY : 0,
-        );
-        const hit = raw.closest(HIT);
-        if (hit instanceof HTMLElement && !hit.hasAttribute("data-physics-shake")) {
-          strikeElement(hit);
-        }
+      if (!hit.hasAttribute("data-physics-shake") && !hit.hasAttribute("data-fx")) {
+        buzz(hit);
       }
     };
 
-    document.addEventListener("pointerdown", onDown, true);
-    document.addEventListener("mousedown", onDown, true);
+    // Vibration needs a completed user activation, which on touch only exists
+    // after pointerup — so the haptic tick rides on click, not pointerdown.
+    const onClick = (event: MouseEvent) => {
+      if (target(event)) {
+        haptic("tap");
+      }
+    };
+
+    document.addEventListener("pointerdown", onDown, { capture: true, passive: true });
+    document.addEventListener("click", onClick, { capture: true, passive: true });
     return () => {
-      document.removeEventListener("pointerdown", onDown, true);
-      document.removeEventListener("mousedown", onDown, true);
+      document.removeEventListener("pointerdown", onDown, { capture: true });
+      document.removeEventListener("click", onClick, { capture: true });
     };
   }, [reduced]);
 

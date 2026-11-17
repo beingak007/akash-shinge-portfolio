@@ -52,6 +52,17 @@
   filter: grayscale(0) contrast(1.04);
 }
 
+/* Golden-hour portraits: keep most of the warm light before hover. */
+.portrait--about img,
+.portrait--leetcode img {
+  filter: grayscale(0.3) saturate(0.92) contrast(1.03);
+}
+
+.portrait--about:hover img,
+.portrait--leetcode:hover img {
+  filter: grayscale(0) saturate(1.05) contrast(1.04);
+}
+
 .portrait--hero {
   width: min(34vw, 340px);
   aspect-ratio: 4 / 5;
@@ -104,7 +115,7 @@
 }
 
 .portrait--leetcode img {
-  object-position: 50% 12%;
+  object-position: 50% 30%;
 }
 
 @media (max-width: 1099px) {
