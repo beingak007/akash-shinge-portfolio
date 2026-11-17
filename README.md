@@ -63,13 +63,31 @@ opens LinkedIn; once set, it becomes a `mailto:` link with a copy button.
 
 ## Search (Google)
 
-The live site is the official page for **Akash Shinge**. After each deploy:
+The live site is the official page for **Akash Shinge**, served at
+`https://akash-shinge.vercel.app` (the only host that is indexable — every
+other Vercel URL for this project sends `X-Robots-Tag: noindex`, see `vercel.json`).
 
-1. Open [Google Search Console](https://search.google.com/search-console) → add `https://akash-shinge.vercel.app`
-2. Submit `https://akash-shinge.vercel.app/sitemap.xml`
-3. Put the same URL on LinkedIn (Website) and GitHub so Google sees matching links
+What the code already does:
 
-Indexing is not instant. Searching `Akash Shinge` after Google crawls should list this site.
+- The first HTML response contains the real content (name in the only `<h1>`,
+  role, summary, skills, projects, experience, links), generated at build time
+  from `src/data` by `src/seo/crawlerMarkup.ts`. React replaces it on load.
+- `index.html` carries the title, description, canonical URL, Open Graph,
+  `rel="me"` identity links, and `Person` structured data.
+- `public/sitemap.xml` lists the page and its portraits.
+
+What only the owner can do (once, after a deploy):
+
+1. Open [Google Search Console](https://search.google.com/search-console) →
+   **Add property** → URL prefix `https://akash-shinge.vercel.app/`.
+2. Verify with the **HTML file** method: the file Google issued lives at
+   `public/google845e6b7589a64793.html` (keep it; deleting it un-verifies the
+   site), then click **Verify**.
+3. **Sitemaps** → submit `https://akash-shinge.vercel.app/sitemap.xml`.
+4. **URL inspection** → the home page → **Request indexing**.
+5. Link the site from LinkedIn (Contact info → Website) and the GitHub profile.
+
+Indexing usually takes a few days to a few weeks.
 
 ## Free host
 
