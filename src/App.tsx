@@ -5,6 +5,7 @@ import {
   revealSections,
   watchActiveSections,
 } from "./animations/scrollAnimations.ts";
+import { CursorParticles } from "./components/cursor/CursorParticles.tsx";
 import { CustomCursor } from "./components/cursor/CustomCursor.tsx";
 import { FarmKart } from "./components/farmkart/FarmKart.tsx";
 import { Experience } from "./components/experience/Experience.tsx";
@@ -117,6 +118,7 @@ export default function App() {
       <PageLoader />
       <PageTransition />
       <ClickFeedback />
+      <CursorParticles />
       <CustomCursor />
       <div className="site-rail" aria-hidden="true">
         <span className="site-rail__mark">SYSTEM // HUMAN</span>

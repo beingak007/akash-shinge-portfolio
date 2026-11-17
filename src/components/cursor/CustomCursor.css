@@ -4,19 +4,11 @@
   z-index: 90;
   pointer-events: none;
   opacity: 0;
-}
-
-.cursor {
   transition: opacity 0.3s var(--ease);
 }
 
 .cursor.is-on {
   opacity: 1;
-}
-
-.cursor__follow[data-mode="view"],
-.cursor__follow[data-mode="image"] {
-  background: rgba(11, 11, 10, 0.78);
 }
 
 .cursor__dot,
@@ -28,27 +20,65 @@
   will-change: transform;
 }
 
+/* Ember core: a hot white centre with a static glow (moved by transform only). */
 .cursor__dot {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
-  background: var(--accent);
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: radial-gradient(circle, #fff7ec 0%, var(--accent-hot) 45%, var(--accent) 100%);
+  box-shadow:
+    0 0 6px 1px rgba(243, 178, 122, 0.9),
+    0 0 18px 4px rgba(212, 120, 58, 0.45);
+  transition: scale 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+
+/* Over links and buttons the core sinks into the lit ring. */
+.cursor[data-mode="hover"] .cursor__dot,
+.cursor[data-mode="open"] .cursor__dot,
+.cursor[data-mode="magnetic"] .cursor__dot {
+  scale: 0.5;
+}
+
+/* Over images and projects the ring carries a label; the core steps aside. */
+.cursor[data-mode="view"] .cursor__dot,
+.cursor[data-mode="image"] .cursor__dot,
+.cursor[data-mode="drag"] .cursor__dot {
+  scale: 0;
+  opacity: 0;
 }
 
 .cursor__follow {
   display: grid;
   place-items: center;
-  width: 52px;
-  height: 52px;
-  margin: -26px 0 0 -26px;
-  border: 1px solid var(--accent);
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 1px solid rgba(243, 178, 122, 0.55);
+  box-shadow:
+    inset 0 0 10px rgba(212, 120, 58, 0.22),
+    0 0 14px rgba(212, 120, 58, 0.18);
+  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.cursor__follow[data-mode="hover"],
+.cursor__follow[data-mode="open"],
+.cursor__follow[data-mode="magnetic"] {
+  border-color: var(--accent-hot);
+  background: rgba(212, 120, 58, 0.16);
+}
+
+.cursor__follow[data-mode="view"],
+.cursor__follow[data-mode="image"],
+.cursor__follow[data-mode="drag"] {
+  border-color: var(--accent-hot);
+  background: rgba(11, 11, 10, 0.82);
 }
 
 .cursor__label {
-  max-width: 7.5rem;
+  max-width: 6rem;
   padding: 0 0.2rem;
   font-family: var(--mono);
-  font-size: 0.48rem;
+  font-size: 0.5rem;
   letter-spacing: 0.12em;
   line-height: 1.2;
   text-align: center;

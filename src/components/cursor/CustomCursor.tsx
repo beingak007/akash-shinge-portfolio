@@ -73,6 +73,9 @@ export function CustomCursor() {
         return;
       }
       lastKey = key;
+      if (root.current) {
+        root.current.dataset.mode = next.mode;
+      }
       setCursorMode(follower.current, label.current, next.mode, next.label);
     };
 
