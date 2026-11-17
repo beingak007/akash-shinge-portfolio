@@ -43,8 +43,8 @@ Edit files in `src/data/` only:
 Portraits:
 
 - `public/profile.jpg` — café photo (nav, contact, social share image)
-- `public/profile-field.jpg` — golden-hour close-up (About)
-- `public/profile-countryside.jpg` — golden-hour full length (LeetCode section)
+- `public/profile-workspace-warm.jpg` — workspace portrait, facing camera (About)
+- `public/profile-workspace-modern.jpg` — workspace portrait, at the desk (LeetCode section)
 
 Add new portraits to `photoSizes` in `profile.ts` with their pixel size.
 

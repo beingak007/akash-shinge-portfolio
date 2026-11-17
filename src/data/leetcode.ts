@@ -31,5 +31,5 @@ export const leetcode: LeetCodeProfile = {
     { name: "Binary Search", count: 8 },
   ],
   school: "Sinhgad Institute of Technology, Lonavala",
-  photo: "/profile-countryside.jpg",
+  photo: "/profile-workspace-modern.jpg",
 };
