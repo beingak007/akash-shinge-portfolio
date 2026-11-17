@@ -9,9 +9,7 @@
   inset: 0;
   background:
     radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--pm-accent) 22%, transparent), transparent 60%),
-    rgba(6, 6, 5, 0.78);
-  backdrop-filter: blur(16px) saturate(1.1);
-  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+    rgba(6, 6, 5, 0.9);
 }
 
 .pm__scroll {

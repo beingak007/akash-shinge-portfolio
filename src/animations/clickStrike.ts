@@ -2,18 +2,30 @@
  * Visual tactile feedback. Deliberately small: a sub-2px damped buzz on the
  * element that was pressed and a thin ripple at the pointer. Nothing moves the
  * page itself.
+ *
+ * The buzz runs through the Web Animations API on the individual `translate`
+ * / `rotate` properties: no forced reflow to restart it, and it composes with
+ * GSAP-driven `transform` (tilt, magnetic) instead of fighting it.
  */
+const BUZZ: Keyframe[] = [
+  { translate: "0 0", rotate: "0deg" },
+  { translate: "-1.4px 0.5px", rotate: "-0.35deg", offset: 0.16 },
+  { translate: "1.2px -0.5px", rotate: "0.28deg", offset: 0.34 },
+  { translate: "-0.7px 0.3px", rotate: "-0.16deg", offset: 0.52 },
+  { translate: "0.35px 0", rotate: "0.06deg", offset: 0.72 },
+  { translate: "0 0", rotate: "0deg" },
+];
+
+const running = new WeakMap<Element, Animation>();
+
 export function buzz(element: Element): void {
-  element.classList.remove("is-buzzing");
-  // Force a reflow so the animation restarts on rapid repeat presses.
-  void (element as HTMLElement).offsetWidth;
-  element.classList.add("is-buzzing");
-  element.addEventListener(
-    "animationend",
-    () => {
-      element.classList.remove("is-buzzing");
-    },
-    { once: true },
+  if (typeof element.animate !== "function") {
+    return;
+  }
+  running.get(element)?.cancel();
+  running.set(
+    element,
+    element.animate(BUZZ, { duration: 280, easing: "cubic-bezier(0.3, 0.7, 0.4, 1)" }),
   );
 }
 
@@ -30,8 +42,7 @@ export function spawnTapRipple(x: number, y: number): void {
 }
 
 /** Ripple confined to a media frame, positioned in the frame's own coordinates. */
-export function spawnFrameRipple(frame: HTMLElement, clientX: number, clientY: number): void {
-  const bounds = frame.getBoundingClientRect();
+export function spawnFrameRipple(frame: HTMLElement, bounds: DOMRect, clientX: number, clientY: number): void {
   const size = Math.max(bounds.width, bounds.height) * 1.4;
   const ring = document.createElement("span");
   ring.className = "fx-ripple";

@@ -16,9 +16,7 @@
 
 .cursor__follow[data-mode="view"],
 .cursor__follow[data-mode="image"] {
-  background: rgba(11, 11, 10, 0.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(11, 11, 10, 0.78);
 }
 
 .cursor__dot,

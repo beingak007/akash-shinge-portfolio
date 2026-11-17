@@ -96,20 +96,9 @@
   font-style: italic;
   padding-right: 0.08em;
   background: var(--gradient-ember);
-  background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: hero-sheen 9s ease-in-out infinite alternate;
-}
-
-@keyframes hero-sheen {
-  from {
-    background-position: 0% 50%;
-  }
-  to {
-    background-position: 100% 50%;
-  }
 }
 
 .hero-char {
@@ -356,8 +345,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero__last > span {
-    animation: none;
-  }
-}

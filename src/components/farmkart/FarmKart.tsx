@@ -152,34 +152,56 @@ export function FarmKart() {
   );
 
   useEffect(() => {
-    if (reduced) {
+    const host = root.current;
+    if (reduced || !host) {
       return;
     }
+    // Path lengths are in viewBox units, so they never change: measure once
+    // instead of forcing SVG geometry work for every edge on every frame.
+    const lanes = paths
+      .map((edge, index) => ({
+        index,
+        path: edge.kind === "async" ? pathRefs.current[edge.id] : null,
+        dot: edge.kind === "async" ? flowRefs.current[edge.id] : null,
+      }))
+      .filter(
+        (item): item is { index: number; path: SVGPathElement; dot: SVGCircleElement } =>
+          Boolean(item.path && item.dot),
+      )
+      .map((item) => ({ ...item, length: item.path.getTotalLength() }))
+      .filter((item) => item.length >= 2);
+
     let frame = 0;
+    let visible = false;
     const tick = (now: number) => {
-      paths.forEach((edge, index) => {
-        if (edge.kind !== "async") {
-          return;
-        }
-        const path = pathRefs.current[edge.id];
-        const dot = flowRefs.current[edge.id];
-        if (!path || !dot) {
-          return;
-        }
-        const length = path.getTotalLength();
-        if (length < 2) {
-          return;
-        }
-        const t = ((now / 3200 + index * 0.11) % 1);
+      // Sleep while the map is off-screen or the tab is hidden.
+      if (!visible || document.hidden) {
+        frame = 0;
+        return;
+      }
+      lanes.forEach(({ index, path, dot, length }) => {
+        const t = (now / 3200 + index * 0.11) % 1;
         const point = path.getPointAtLength(t * length);
         dot.setAttribute("cx", String(point.x));
         dot.setAttribute("cy", String(point.y));
       });
       frame = requestAnimationFrame(tick);
     };
-    frame = requestAnimationFrame(tick);
+    const resume = () => {
+      if (!frame && visible && !document.hidden) {
+        frame = requestAnimationFrame(tick);
+      }
+    };
+    const viewport = new IntersectionObserver(([entry]) => {
+      visible = Boolean(entry?.isIntersecting);
+      resume();
+    });
+    viewport.observe(host);
+    document.addEventListener("visibilitychange", resume);
     return () => {
       cancelAnimationFrame(frame);
+      viewport.disconnect();
+      document.removeEventListener("visibilitychange", resume);
     };
   }, [paths, reduced]);
 

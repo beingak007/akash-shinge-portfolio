@@ -103,11 +103,19 @@
 .farmkart__grid {
   position: absolute;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
+}
+
+.farmkart__grid::before {
+  content: "";
+  position: absolute;
+  inset: -48px 0 0 -48px;
   background-image:
     linear-gradient(to right, var(--grid) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
   background-size: 48px 48px;
+  will-change: transform;
   animation: farmkart-grid 64s linear infinite;
 }
 
@@ -281,7 +289,7 @@
 
 @keyframes farmkart-grid {
   to {
-    background-position: 48px 48px;
+    transform: translate3d(48px, 48px, 0);
   }
 }
 

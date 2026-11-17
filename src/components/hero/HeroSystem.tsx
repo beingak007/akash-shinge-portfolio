@@ -66,8 +66,14 @@ export function HeroSystem() {
       return;
     }
 
+    // Cached stage size: the loop must not read layout every frame.
+    let stageWidth = 1;
+    let stageHeight = 1;
+
     const measure = () => {
       const box = root.getBoundingClientRect();
+      stageWidth = box.width || 1;
+      stageHeight = box.height || 1;
       bodies.current = workflowNodes.map((node) => {
         const prev = bodies.current.find((body) => body.id === node.id);
         const homeX = (node.x / 100) * box.width;
@@ -100,8 +106,14 @@ export function HeroSystem() {
     let frame = 0;
     let elapsed = 0;
     let last = performance.now();
+    let visible = true;
 
     const tick = (now: number) => {
+      // Sleep while the hero is off-screen or the tab is hidden.
+      if (!visible || document.hidden) {
+        frame = 0;
+        return;
+      }
       const dt = Math.min(32, now - last) / 16.67;
       last = now;
       elapsed += dt;
@@ -176,10 +188,10 @@ export function HeroSystem() {
         const scale = focus === body.id ? 1.12 : 1;
         const lift = (focus === body.id ? 32 : 0) + (body.hub ? 14 : 0);
         const rx = pointer
-          ? ((mouse.current.y / (root.clientHeight || 1)) - 0.5) * -11
+          ? ((mouse.current.y / stageHeight) - 0.5) * -11
           : 0;
         const ry = pointer
-          ? ((mouse.current.x / (root.clientWidth || 1)) - 0.5) * 14
+          ? ((mouse.current.x / stageWidth) - 0.5) * 14
           : 0;
         el.style.transform = `translate3d(calc(-50% + ${body.x - body.homeX + jx}px), calc(-50% + ${body.y - body.homeY + jy}px), ${lift}px) rotateX(${rx}deg) rotateY(${ry}deg) scale(${scale})`;
       }
@@ -207,10 +219,25 @@ export function HeroSystem() {
       frame = requestAnimationFrame(tick);
     };
 
+    const resume = () => {
+      if (!frame && visible && !document.hidden) {
+        last = performance.now();
+        frame = requestAnimationFrame(tick);
+      }
+    };
+    const viewport = new IntersectionObserver(([entry]) => {
+      visible = Boolean(entry?.isIntersecting);
+      resume();
+    });
+    viewport.observe(root);
+    document.addEventListener("visibilitychange", resume);
+
     frame = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      viewport.disconnect();
+      document.removeEventListener("visibilitychange", resume);
     };
   }, [desktop, reduced]);
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import {
   revealHeadings,
   revealMasks,
@@ -68,6 +68,30 @@ const progressAlias: Record<string, string> = {
   contact: "contact",
 };
 
+/**
+ * The page content never depends on which section is active, so it is
+ * memoized: scroll-driven section changes re-render only the nav, progress
+ * rail, and ambient light — not every section on the page.
+ */
+const PageSections = memo(function PageSections() {
+  return (
+    <main id="main">
+      <Hero />
+      <About />
+      <Capabilities />
+      <StackMap />
+      <Work />
+      <Experience />
+      <HowIThink />
+      <FarmKart />
+      <Code />
+      <ProblemSet />
+      <Metrics />
+      <Contact />
+    </main>
+  );
+});
+
 export default function App() {
   const reduced = useReducedMotion();
   const [sectionId, setSectionId] = useState("hero");
@@ -102,20 +126,7 @@ export default function App() {
       </div>
       <FloatingNav activeId={activeId} />
       <SectionProgress activeId={progressAlias[sectionId] ?? sectionId} />
-      <main id="main">
-        <Hero />
-        <About />
-        <Capabilities />
-        <StackMap />
-        <Work />
-        <Experience />
-        <HowIThink />
-        <FarmKart />
-        <Code />
-        <ProblemSet />
-        <Metrics />
-        <Contact />
-      </main>
+      <PageSections />
       <Footer />
     </>
   );

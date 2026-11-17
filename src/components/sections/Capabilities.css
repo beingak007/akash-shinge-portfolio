@@ -169,9 +169,7 @@
   border: 1px solid var(--glass-line);
   background:
     radial-gradient(circle at 30% 0%, rgba(212, 120, 58, 0.22), transparent 60%),
-    var(--glass);
-  backdrop-filter: blur(18px) saturate(1.2);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    var(--glass-strong);
   pointer-events: none;
   opacity: 0;
   scale: 0.6;

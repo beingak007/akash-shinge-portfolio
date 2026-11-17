@@ -13,14 +13,18 @@ export interface MediaFxOptions {
 /**
  * Binds the shared image interaction model to a frame marked `.fx`:
  * hover lift + 3D tilt + magnetic drift + light that follows the pointer +
- * animated border, and on press a damped buzz, in-frame ripple, and (for SVG
- * covers that opt in) a short displacement pulse.
+ * lit border, and on press a damped buzz and an in-frame ripple.
+ *
+ * Everything that moves per pointer event is a transform (compositor only):
+ * no CSS variables, filters, or layout reads on pointermove beyond one
+ * cached bounding box per hover.
  *
  * Touch gets the light, press, ripple, and buzz — never hover-only behaviour.
  */
 export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => void {
   const { tilt, magnetic, desktop, reduced } = options;
   const motion = desktop && !reduced;
+  const glare = frame.querySelector<HTMLElement>(".fx__glare");
 
   if (motion) {
     gsap.set(frame, { transformPerspective: 1100 });
@@ -30,82 +34,61 @@ export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => 
   const rotY = motion ? gsap.quickTo(frame, "rotationY", { duration: 0.6, ease: "power3.out" }) : null;
   const moveX = motion ? gsap.quickTo(frame, "x", { duration: 0.7, ease: "power3.out" }) : null;
   const moveY = motion ? gsap.quickTo(frame, "y", { duration: 0.7, ease: "power3.out" }) : null;
+  const lightX = glare ? gsap.quickTo(glare, "x", { duration: 0.45, ease: "power3.out" }) : null;
+  const lightY = glare ? gsap.quickTo(glare, "y", { duration: 0.45, ease: "power3.out" }) : null;
 
-  let frameRequest = 0;
-  let pendingX = 0.5;
-  let pendingY = 0.5;
+  // Measured once per hover / press; tilt does not change the layout box.
+  let bounds: DOMRect | null = null;
   let releaseTimer = 0;
 
-  const paintLight = () => {
-    frameRequest = 0;
-    frame.style.setProperty("--mx", `${(pendingX * 100).toFixed(2)}%`);
-    frame.style.setProperty("--my", `${(pendingY * 100).toFixed(2)}%`);
-  };
-
-  const track = (event: PointerEvent) => {
-    const bounds = frame.getBoundingClientRect();
-    pendingX = (event.clientX - bounds.left) / Math.max(bounds.width, 1);
-    pendingY = (event.clientY - bounds.top) / Math.max(bounds.height, 1);
-    if (!frameRequest) {
-      frameRequest = requestAnimationFrame(paintLight);
-    }
+  const measure = () => {
+    bounds = frame.getBoundingClientRect();
     return bounds;
   };
 
-  const onEnter = (event: PointerEvent) => {
-    if (event.pointerType === "mouse") {
-      frame.classList.add("is-hot");
+  const light = (event: PointerEvent, box: DOMRect, instant = false) => {
+    const x = event.clientX - box.left;
+    const y = event.clientY - box.top;
+    if (instant && glare) {
+      gsap.set(glare, { x, y });
+      return;
     }
+    lightX?.(x);
+    lightY?.(y);
+  };
+
+  const onEnter = (event: PointerEvent) => {
+    if (event.pointerType !== "mouse") {
+      return;
+    }
+    light(event, measure(), true);
+    frame.classList.add("is-hot");
   };
 
   const onMove = (event: PointerEvent) => {
-    const bounds = track(event);
-    if (event.pointerType !== "mouse" || !rotX || !rotY || !moveX || !moveY) {
+    if (event.pointerType !== "mouse") {
       return;
     }
-    const nx = pendingX - 0.5;
-    const ny = pendingY - 0.5;
+    const box = bounds ?? measure();
+    light(event, box);
+    if (!rotX || !rotY || !moveX || !moveY) {
+      return;
+    }
+    const nx = (event.clientX - box.left) / Math.max(box.width, 1) - 0.5;
+    const ny = (event.clientY - box.top) / Math.max(box.height, 1) - 0.5;
     rotY(nx * tilt * 2);
     rotX(-ny * tilt);
-    moveX(nx * bounds.width * magnetic);
-    moveY(ny * bounds.height * magnetic);
+    moveX(nx * box.width * magnetic);
+    moveY(ny * box.height * magnetic);
   };
 
-  const settle = () => {
+  const onLeave = () => {
+    bounds = null;
+    frame.classList.remove("is-hot", "is-pressed");
     rotX?.(0);
     rotY?.(0);
     moveX?.(0);
     moveY?.(0);
-  };
-
-  const onLeave = () => {
-    frame.classList.remove("is-hot", "is-pressed");
-    settle();
-  };
-
-  const pulseDistortion = () => {
-    const group = frame.querySelector<SVGGElement>("[data-fx-distort]");
-    const map = frame.querySelector<SVGFEDisplacementMapElement>("[data-fx-displace]");
-    const filter = group?.dataset.fxDistort;
-    if (!group || !map || !filter) {
-      return;
-    }
-    group.setAttribute("filter", filter);
-    gsap.killTweensOf(map);
-    gsap.fromTo(
-      map,
-      { attr: { scale: 0 } },
-      {
-        keyframes: [
-          { attr: { scale: 34 }, duration: 0.16, ease: "power2.out" },
-          { attr: { scale: 0 }, duration: 0.6, ease: "power3.out" },
-        ],
-        onComplete: () => {
-          // Filters are costly; only keep one attached while it is visible.
-          group.removeAttribute("filter");
-        },
-      },
-    );
   };
 
   const onDown = (event: PointerEvent) => {
@@ -113,17 +96,17 @@ export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => 
       return;
     }
     window.clearTimeout(releaseTimer);
-    track(event);
+    const box = measure();
     frame.classList.add("is-pressed");
     if (event.pointerType !== "mouse") {
+      light(event, box, true);
       frame.classList.add("is-hot");
     }
     if (reduced) {
       return;
     }
     buzz(frame);
-    spawnFrameRipple(frame, event.clientX, event.clientY);
-    pulseDistortion();
+    spawnFrameRipple(frame, box, event.clientX, event.clientY);
   };
 
   const onUp = (event: PointerEvent) => {
@@ -136,6 +119,12 @@ export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => 
     }
   };
 
+  // Scrolling moves the frame under a still pointer (pinned gallery, Lenis).
+  const onScroll = () => {
+    bounds = null;
+  };
+
+  window.addEventListener("scroll", onScroll, { passive: true });
   frame.addEventListener("pointerenter", onEnter);
   frame.addEventListener("pointermove", onMove);
   frame.addEventListener("pointerleave", onLeave);
@@ -144,8 +133,8 @@ export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => 
   frame.addEventListener("pointercancel", onUp);
 
   return () => {
-    cancelAnimationFrame(frameRequest);
     window.clearTimeout(releaseTimer);
+    window.removeEventListener("scroll", onScroll);
     frame.removeEventListener("pointerenter", onEnter);
     frame.removeEventListener("pointermove", onMove);
     frame.removeEventListener("pointerleave", onLeave);
