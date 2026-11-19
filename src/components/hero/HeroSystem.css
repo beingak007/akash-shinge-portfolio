@@ -105,7 +105,7 @@
   width: 3.15rem;
   height: 3.15rem;
   border: 1px solid var(--line-strong);
-  background: #141412;
+  background: var(--surface-2);
 }
 
 .hero-system__node.is-hub .hero-system__mark {

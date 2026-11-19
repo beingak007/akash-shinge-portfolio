@@ -65,7 +65,7 @@
 
 .marquee__row--alt .marquee__name {
   color: transparent;
-  -webkit-text-stroke: 1px rgba(236, 231, 220, 0.5);
+  -webkit-text-stroke: 1px rgb(var(--ink-rgb) / 0.5);
 }
 
 .marquee__item:hover .marquee__name {

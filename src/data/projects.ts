@@ -59,7 +59,10 @@ export const projects: Project[] = [
       ],
     },
     image: null,
-    links: [{ label: "OPEN SYSTEM MAP", href: "#farmkart", kind: "case-study" }],
+    links: [
+      { label: "GITHUB", href: "https://github.com/beingak007/Farm-Kart", kind: "github" },
+      { label: "OPEN SYSTEM MAP", href: "#farmkart", kind: "case-study" },
+    ],
     kind: "study",
   },
   {

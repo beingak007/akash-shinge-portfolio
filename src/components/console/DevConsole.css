@@ -1,0 +1,669 @@
+/*
+ * Developer Console. The editor window uses the code tokens, which stay dark
+ * in both themes; the note card beside it uses the page surface tokens.
+ */
+
+.console {
+  overflow-x: clip;
+}
+
+/* ---------- intro ---------- */
+
+.console__intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1.4rem 4rem;
+  align-items: end;
+  margin-bottom: var(--space-5);
+}
+
+.console__title {
+  font-size: clamp(2.6rem, 6vw, 5.6rem);
+}
+
+.console__title em {
+  font-style: italic;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-right: 0.06em;
+}
+
+.console__lede {
+  margin: 0;
+  justify-self: end;
+}
+
+/* ---------- layout ---------- */
+
+.console__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 19rem);
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.console__layout > * {
+  min-width: 0;
+}
+
+/* ---------- window chrome ---------- */
+
+.console__window {
+  --console-chrome: color-mix(in srgb, var(--code-ink) 3%, var(--code-bg));
+  --console-raised: color-mix(in srgb, var(--code-ink) 5%, var(--code-bg));
+  --console-hover: color-mix(in srgb, var(--code-ink) 4%, transparent);
+
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--code-line);
+  background: var(--code-bg);
+  color: var(--code-ink);
+  box-shadow: var(--shadow-card);
+}
+
+.console__bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--code-line);
+  background: var(--console-raised);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--code-dim);
+}
+
+.console__dots {
+  display: flex;
+  flex: none;
+  gap: 0.4rem;
+}
+
+.console__dot {
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background: var(--syn-number);
+  opacity: 0.85;
+}
+
+.console__dot:nth-child(2) {
+  background: var(--syn-annotation);
+}
+
+.console__dot:nth-child(3) {
+  background: var(--syn-string);
+}
+
+.console__bar-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console__bar-tag {
+  flex: none;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--code-line);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.console__body {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+}
+
+/* ---------- explorer ---------- */
+
+.console__tree {
+  min-width: 0;
+  padding: 0.9rem 0 1.2rem;
+  border-right: 1px solid var(--code-line);
+  background: var(--console-chrome);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.console__tree-head {
+  margin: 0 0 0.7rem;
+  padding: 0 1rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  color: var(--code-dim);
+}
+
+.console__tree-root,
+.console__dir {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0.28rem 1rem 0.28rem 1.6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--code-dim);
+}
+
+.console__tree-root {
+  padding-left: 1rem;
+  color: var(--code-ink);
+  letter-spacing: 0.04em;
+}
+
+/* Open-folder chevron, drawn so it never depends on a font glyph. */
+.console__dir::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0.95rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-70%) rotate(45deg);
+}
+
+.console__dir::after {
+  content: "/";
+}
+
+.console__tree-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.console__file {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 1.9rem;
+  padding: 0 0.6rem 0 1.6rem;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--code-dim);
+  cursor: pointer;
+}
+
+.console__file:hover {
+  background: var(--console-hover);
+  color: var(--code-ink);
+}
+
+.console__file[aria-current="true"] {
+  background: color-mix(in srgb, var(--syn-type) 13%, transparent);
+  color: var(--code-ink);
+  box-shadow: inset 2px 0 0 var(--syn-fn);
+}
+
+.console__file-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console__badge {
+  flex: none;
+  min-width: 1.5rem;
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--console-badge, var(--code-dim));
+}
+
+.console [data-lang="java"] {
+  --console-badge: var(--syn-number);
+}
+
+.console [data-lang="tsx"] {
+  --console-badge: var(--syn-type);
+}
+
+.console [data-lang="sql"] {
+  --console-badge: var(--syn-annotation);
+}
+
+.console [data-lang="text"] {
+  --console-badge: var(--syn-string);
+}
+
+/* ---------- tabs ---------- */
+
+.console__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.console__tabs {
+  position: relative;
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  background: var(--console-chrome);
+  box-shadow: inset 0 -1px 0 var(--code-line);
+  scrollbar-width: none;
+}
+
+.console__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.console__tab {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.45rem;
+  height: 2.6rem;
+  padding: 0 1.05rem 0 0.9rem;
+  border-right: 1px solid var(--code-line);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  color: var(--code-dim);
+  cursor: pointer;
+}
+
+.console__tab .console__badge {
+  min-width: 0;
+}
+
+.console__tab::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--gradient-brand);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s var(--ease);
+}
+
+.console__tab:hover {
+  color: var(--code-ink);
+}
+
+.console__tab[aria-selected="true"] {
+  background: var(--code-bg);
+  color: var(--code-ink);
+}
+
+.console__tab[aria-selected="true"]::after {
+  transform: scaleX(1);
+}
+
+/* ---------- panel ---------- */
+
+.console__panel[hidden] {
+  display: none;
+}
+
+.console__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2.4rem;
+  padding: 0.3rem 0.6rem 0.3rem 1rem;
+  border-bottom: 1px solid var(--code-line);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--code-dim);
+}
+
+.console__crumbs {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console__crumbs > span:last-child {
+  color: var(--code-ink);
+}
+
+.console__crumb-sep {
+  color: var(--code-dim);
+}
+
+.console__copy {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 1.8rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--code-line);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--code-ink);
+  cursor: pointer;
+}
+
+.console__copy:hover {
+  border-color: var(--syn-fn);
+  color: var(--syn-fn);
+}
+
+.console__copy.is-copied {
+  border-color: var(--syn-string);
+  color: var(--syn-string);
+}
+
+.console__copy-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+
+/* ---------- code ---------- */
+
+.console__code {
+  /* Fixed height: switching files never shifts the page below. */
+  height: clamp(20rem, 62svh, 34rem);
+  margin: 0;
+  padding: 0.9rem 0 1.2rem;
+  overflow: auto;
+  overscroll-behavior-x: contain;
+  background: var(--code-bg);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--code-ink);
+  tab-size: 2;
+  scrollbar-width: thin;
+  scrollbar-color: var(--code-dim) transparent;
+}
+
+.console__code code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  font: inherit;
+  color: inherit;
+}
+
+.console__line {
+  display: flex;
+  white-space: pre;
+}
+
+.console__line:hover {
+  background: var(--console-hover);
+}
+
+.console__ln {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  flex: none;
+  width: 3.4rem;
+  padding-right: 1.2rem;
+  text-align: right;
+  background: var(--code-bg);
+  color: var(--code-dim);
+  user-select: none;
+}
+
+.console__line:hover .console__ln {
+  background: var(--console-raised);
+  color: var(--code-ink);
+}
+
+.console__src {
+  padding-right: 1.5rem;
+}
+
+.console__code .syn-keyword {
+  color: var(--syn-keyword);
+}
+
+.console__code .syn-type {
+  color: var(--syn-type);
+}
+
+.console__code .syn-string {
+  color: var(--syn-string);
+}
+
+.console__code .syn-comment {
+  color: var(--syn-comment);
+  font-style: italic;
+}
+
+.console__code .syn-fn {
+  color: var(--syn-fn);
+}
+
+.console__code .syn-number {
+  color: var(--syn-number);
+}
+
+.console__code .syn-annotation {
+  color: var(--syn-annotation);
+}
+
+.console__code .syn-plain {
+  color: var(--code-ink);
+}
+
+/* Box-drawing glyphs fill the font's 1.3em line box; at that line height the
+   diagram's vertical strokes join up. Keep them upright, too. */
+.console__code[data-lang="text"] {
+  line-height: 1.3;
+}
+
+.console__code[data-lang="text"] .syn-comment {
+  font-style: normal;
+}
+
+/* ---------- status bar ---------- */
+
+.console__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 1.9rem;
+  padding: 0 1rem;
+  border-top: 1px solid var(--code-line);
+  background: var(--console-chrome);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--code-dim);
+}
+
+.console__status-group {
+  display: flex;
+  gap: 1.1rem;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.console__status-lang {
+  color: var(--console-badge, var(--code-ink));
+}
+
+/* ---------- focus inside the dark editor ---------- */
+
+.console__window :focus-visible {
+  outline: 1px solid var(--syn-fn);
+  outline-offset: -2px;
+}
+
+/* ---------- note ---------- */
+
+.console__aside {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem 1.3rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.console__aside-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.console__count {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-dim);
+}
+
+/* Every note shares one grid cell, so the card is always as tall as the
+   longest note and switching files never changes the layout. */
+.console__notes {
+  display: grid;
+}
+
+.console__note {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.console__note:not(.is-active) {
+  visibility: hidden;
+}
+
+.console__note-title {
+  margin: 1rem 0 0.7rem;
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 2.3vw, 2.05rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.console__note-text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.console__focus {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 1.2rem 0 1.3rem;
+  padding: 0;
+  list-style: none;
+}
+
+.console__focus .chip {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.console__disclaimer {
+  margin: auto 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1199px) {
+  .console__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .console__intro {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .console__lede {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 899px) {
+  .console__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .console__tree {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .console__bar {
+    gap: 0.7rem;
+    padding: 0 0.75rem;
+  }
+
+  .console__bar-tag,
+  .console__status-meta {
+    display: none;
+  }
+
+  .console__tab {
+    padding: 0 0.85rem 0 0.75rem;
+    font-size: 0.68rem;
+  }
+
+  .console__toolbar {
+    padding-left: 0.75rem;
+  }
+
+  .console__code {
+    height: clamp(18rem, 58svh, 26rem);
+    font-size: 0.72rem;
+  }
+
+  .console__ln {
+    width: 2.5rem;
+    padding-right: 0.8rem;
+  }
+
+  .console__aside {
+    padding: 1.2rem 1.1rem 1.1rem;
+  }
+}
+
+@media (pointer: coarse) {
+  .console__tab {
+    height: 2.9rem;
+  }
+
+  .console__copy {
+    min-height: 2.5rem;
+  }
+}

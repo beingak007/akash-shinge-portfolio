@@ -110,9 +110,112 @@
 
 .hero__stage {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 520px);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.82fr);
   gap: 4vw;
   align-items: center;
+}
+
+/* Slowly turning colour field behind the name: one transformed layer, no repaint. */
+.hero__aurora {
+  position: absolute;
+  top: -30%;
+  right: -28%;
+  z-index: 0;
+  width: 95vmax;
+  height: 95vmax;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 38%, var(--blob-1), transparent 52%),
+    radial-gradient(circle at 66% 62%, var(--blob-2), transparent 50%),
+    radial-gradient(circle at 52% 28%, var(--blob-3), transparent 56%);
+  pointer-events: none;
+}
+
+.hero__intro {
+  margin: -1rem 0 2rem;
+  max-width: 34rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- portrait + floating stack badges ---------- */
+
+.hero__visual {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 460px);
+  padding: 2.5rem 0;
+}
+
+.hero__frame {
+  position: relative;
+  width: min(30vw, 380px);
+  margin: 0 auto;
+}
+
+.hero .portrait--hero {
+  width: 100%;
+  box-shadow: var(--shadow-card);
+}
+
+.hero .portrait--hero img {
+  object-position: 60% 30%;
+}
+
+.hero__badges {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.hero__badge {
+  position: absolute;
+  left: clamp(0%, var(--bx), calc(100% - 8.5rem));
+  top: var(--by);
+}
+
+.hero__badge-float {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem 0.45rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--glass-strong);
+  box-shadow: var(--shadow-card);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  white-space: nowrap;
+  will-change: transform;
+  animation: hero-badge-float 6s ease-in-out infinite alternate;
+  animation-delay: calc(var(--delay) * -1);
+}
+
+.hero__badge-logo {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--surface-2);
+}
+
+.hero__badge-logo svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+@keyframes hero-badge-float {
+  from {
+    transform: translate3d(0, -6px, 0) rotate(-1.5deg);
+  }
+  to {
+    transform: translate3d(0, 8px, 0) rotate(1.5deg);
+  }
 }
 
 .hero__copy {
@@ -164,10 +267,6 @@
 .btn--lg {
   min-height: 3.4rem;
   padding: 0 1.6rem;
-}
-
-.hero .hero-system {
-  width: 100%;
 }
 
 /* ---------- foot ---------- */
@@ -263,6 +362,15 @@
     gap: 2rem;
   }
 
+  .hero__frame {
+    width: min(64vw, 340px);
+  }
+
+  .hero__badge-float {
+    font-size: 0.6rem;
+    padding: 0.35rem 0.65rem 0.35rem 0.4rem;
+  }
+
   .hero__title {
     max-width: none;
     font-size: clamp(1.55rem, 6.4vw, 2.4rem);
@@ -345,3 +453,9 @@
   }
 }
 
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__badge-float {
+    animation: none;
+  }
+}

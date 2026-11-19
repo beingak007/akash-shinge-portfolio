@@ -12,6 +12,17 @@ html {
   color: var(--ink);
 }
 
+/* Theme switch: a circular reveal drives this (src/utils/theme.ts). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
+}
+
 html,
 body {
   margin: 0;
@@ -234,7 +245,7 @@ a {
 .btn--solid {
   background: var(--accent);
   border-color: var(--accent);
-  color: var(--bg);
+  color: var(--on-accent);
 }
 
 .btn--solid:hover,

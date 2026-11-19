@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import {
   bindHeroPointer,
   bindHeroScroll,
@@ -11,9 +11,20 @@ import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { useGSAP } from "../../utils/gsap.ts";
 import { onSiteReady } from "../../utils/siteReady.ts";
 import { scrollToSection } from "../../utils/scrollToSection.ts";
+import { ProfilePortrait } from "../profile/ProfilePortrait.tsx";
 import { HeroGrid } from "./HeroGrid.tsx";
-import { HeroSystem } from "./HeroSystem.tsx";
+import { TechLogo } from "./TechLogo.tsx";
 import "./Hero.css";
+
+/** Floating stack badges around the portrait: position (% of the visual) and float timing. */
+const badges = [
+  { id: "java", label: "Java", x: -6, y: 14, delay: 0 },
+  { id: "spring-boot", label: "Spring Boot", x: 78, y: 6, delay: 1.2 },
+  { id: "kafka", label: "Kafka", x: 88, y: 46, delay: 0.6 },
+  { id: "react", label: "React", x: -14, y: 58, delay: 1.8 },
+  { id: "mysql", label: "MySQL", x: 70, y: 86, delay: 2.4 },
+  { id: "docker", label: "Docker", x: 2, y: 92, delay: 0.9 },
+] as const;
 
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -28,10 +39,9 @@ export function Hero() {
       }
       const intro = buildHeroIntro(root.current, reduced);
       bindHeroScroll(root.current, reduced);
-      const stop = onSiteReady(() => {
+      return onSiteReady(() => {
         intro.play();
       });
-      return stop;
     },
     { scope: root, dependencies: [reduced], revertOnUpdate: true },
   );
@@ -57,6 +67,7 @@ export function Hero() {
 
   return (
     <section ref={root} className="hero" id="hero" data-hero-stage>
+      <div className="hero__aurora" aria-hidden="true" />
       <HeroGrid />
       <p className="hero__ghost" aria-hidden="true" data-hero-ghost>
         SYSTEMS
@@ -90,6 +101,11 @@ export function Hero() {
           <p className="hero__title" data-hero-heading>
             {profile.statement}
           </p>
+          <p className="hero__intro" data-hero-label>
+            Backend first — Java, Spring Boot, Kafka, and the MySQL and Cassandra
+            paths underneath — with the React interfaces that make those systems
+            usable.
+          </p>
           <div className="hero__actions" data-hero-actions>
             <button
               className="btn btn--solid btn--lg"
@@ -98,7 +114,7 @@ export function Hero() {
               data-cursor-label="EXPLORE →"
               data-magnetic
               onClick={() => {
-                scrollToSection("work", reduced, "Selected work");
+                scrollToSection("work", reduced, "Projects");
               }}
             >
               EXPLORE MY WORK
@@ -118,7 +134,34 @@ export function Hero() {
           </div>
         </div>
 
-        <HeroSystem />
+        <div className="hero__visual" data-hero-visual>
+          <div className="hero__frame" data-hero-frame>
+            <ProfilePortrait treatment="hero" src={profile.heroPhoto} />
+          </div>
+          <ul className="hero__badges" aria-label="Core stack" data-hero-badges>
+            {badges.map((badge) => (
+              <li
+                key={badge.id}
+                className="hero__badge"
+                style={
+                  {
+                    "--bx": `${badge.x}%`,
+                    "--by": `${badge.y}%`,
+                    "--delay": `${badge.delay}s`,
+                  } as CSSProperties
+                }
+                data-hero-badge
+              >
+                <span className="hero__badge-float">
+                  <span className="hero__badge-logo">
+                    <TechLogo id={badge.id} />
+                  </span>
+                  {badge.label}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div className="hero__foot">

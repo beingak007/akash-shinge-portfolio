@@ -195,7 +195,7 @@
 
 .contact__socials {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   margin: 4rem 0 0;
   padding: 0;
   list-style: none;
@@ -214,10 +214,10 @@
 .social {
   position: relative;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto auto 1fr auto;
   grid-template-areas:
-    "index name arrow"
-    "index handle arrow";
+    "index icon name arrow"
+    "index icon handle arrow";
   column-gap: 1rem;
   align-items: center;
   padding: 1.5rem 1.2rem;
@@ -275,6 +275,121 @@
   rotate: 45deg;
 }
 
+/* ---------- animated social icons ---------- */
+
+.social__icon {
+  grid-area: icon;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--ink);
+  transition: color 0.35s var(--ease), border-color 0.35s var(--ease), background-color 0.35s var(--ease);
+}
+
+.social__icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  transition: transform 0.5s var(--ease);
+}
+
+.social:hover .social__icon,
+.social:focus-visible .social__icon {
+  color: var(--on-accent);
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.social:hover .social__icon svg,
+.social:focus-visible .social__icon svg {
+  transform: rotate(-12deg) scale(1.15);
+}
+
+/* ---------- contact form ---------- */
+
+.cform {
+  display: grid;
+  gap: 1.2rem;
+  max-width: 54rem;
+  margin-top: 4rem;
+  padding: 1.8rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.cform__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.cform__field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.cform label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.cform input,
+.cform textarea {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.cform input:focus,
+.cform textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.cform [aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.cform__error {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--danger);
+}
+
+.cform__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.4rem;
+}
+
+.cform__status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+}
+
+.cform__status.is-sent {
+  color: var(--success);
+}
+
+.cform__status.is-error {
+  color: var(--danger);
+}
+
 @media (max-width: 900px) {
   .contact {
     min-height: auto;
@@ -293,6 +408,14 @@
   }
 
   .contact__socials {
+    grid-template-columns: 1fr;
+  }
+
+  .cform {
+    padding: 1.2rem;
+  }
+
+  .cform__row {
     grid-template-columns: 1fr;
   }
 

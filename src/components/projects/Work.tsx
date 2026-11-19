@@ -127,7 +127,7 @@ export function Work() {
       <div className="work__pin">
         <div className="work__track" data-work-track>
           <header className="work__intro">
-            <p className="kicker">04 — FEATURED PROJECTS</p>
+            <p className="kicker">05 — FEATURED PROJECTS</p>
             <h2 className="display work__title" data-split>
               Selected <em>work.</em>
             </h2>
@@ -163,6 +163,15 @@ export function Work() {
                 }}
               >
                 <ProjectCover project={project} />
+                {/* Hover reveal: architecture highlights slide up over the cover. */}
+                <span className="work-card__reveal" aria-hidden="true">
+                  <span className="work-card__reveal-kicker">ARCHITECTURE HIGHLIGHTS</span>
+                  {project.challenges.slice(0, 2).map((item) => (
+                    <span key={item} className="work-card__reveal-item">
+                      {item}
+                    </span>
+                  ))}
+                </span>
                 <FxLayers />
               </button>
 
@@ -196,6 +205,21 @@ export function Work() {
                   >
                     OPEN PROJECT <span aria-hidden="true">+</span>
                   </button>
+                  {project.links
+                    .filter((link) => link.kind === "github" || link.kind === "live")
+                    .map((link) => (
+                      <a
+                        key={link.href}
+                        className="work-card__repo"
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        data-cursor="open"
+                        data-cursor-label={link.kind === "github" ? "CODE" : "LIVE"}
+                      >
+                        {link.kind === "github" ? "VIEW CODE" : "LIVE DEMO"} <span aria-hidden="true">↗</span>
+                      </a>
+                    ))}
                 </div>
               </div>
             </article>

@@ -6,6 +6,7 @@ import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { gsap, SplitText, useGSAP } from "../../utils/gsap.ts";
 import { scrollToSection } from "../../utils/scrollToSection.ts";
+import { subscribeTheme } from "../../utils/theme.ts";
 import "./Footer.css";
 
 const year = new Date().getFullYear();
@@ -22,11 +23,18 @@ export function Footer() {
         return;
       }
       const split = SplitText.create(mark, { type: "chars", charsClass: "footer__char" });
-      // Letters graded ember → cool across the wordmark.
-      const tint = gsap.utils.interpolate("#d4783a", "#6cc5b8");
-      split.chars.forEach((char, index) => {
-        (char as HTMLElement).style.color = tint(index / Math.max(split.chars.length - 1, 1));
-      });
+      // Letters graded across the theme's brand colours; re-tinted on theme change.
+      const paint = () => {
+        const style = getComputedStyle(document.documentElement);
+        const from = style.getPropertyValue("--accent").trim() || "#a78bfa";
+        const to = style.getPropertyValue("--accent-cool").trim() || "#22d3ee";
+        const tint = gsap.utils.interpolate(from, to);
+        split.chars.forEach((char, index) => {
+          (char as HTMLElement).style.color = tint(index / Math.max(split.chars.length - 1, 1));
+        });
+      };
+      paint();
+      const stopTheme = subscribeTheme(paint);
 
       if (!reduced) {
         gsap.from(split.chars, {
@@ -44,12 +52,13 @@ export function Footer() {
       }
 
       if (!desktop || reduced) {
-        return;
+        return stopTheme;
       }
       const cleanups = [...root.current.querySelectorAll<HTMLElement>("[data-magnetic]")].map((el) =>
         bindMagnetic(el, 0.35),
       );
       return () => {
+        stopTheme();
         cleanups.forEach((fn) => {
           fn();
         });

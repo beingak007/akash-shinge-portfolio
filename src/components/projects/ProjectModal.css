@@ -9,7 +9,7 @@
   inset: 0;
   background:
     radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--pm-accent) 22%, transparent), transparent 60%),
-    rgba(6, 6, 5, 0.9);
+    rgb(var(--bg-rgb) / 0.9);
 }
 
 .pm__scroll {
@@ -31,7 +31,7 @@
 .pm__surface {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(24, 22, 20, 0.95), rgba(13, 12, 11, 0.97));
+  background: linear-gradient(180deg, rgb(var(--surface-rgb) / 0.95), rgb(var(--bg-rgb) / 0.97));
   border: 1px solid var(--glass-line);
   box-shadow: 0 60px 140px -60px rgba(0, 0, 0, 0.9);
 }

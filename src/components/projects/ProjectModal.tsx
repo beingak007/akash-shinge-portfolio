@@ -4,6 +4,7 @@ import { projects } from "../../data/projects.ts";
 import { useMediaFx } from "../../hooks/useMediaFx.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { gsap, useGSAP } from "../../utils/gsap.ts";
+import { haptic } from "../../utils/haptics.ts";
 import { scrollToSection } from "../../utils/scrollToSection.ts";
 import { FxLayers } from "../media/FxLayers.tsx";
 import { ProjectCover } from "./ProjectCover.tsx";
@@ -221,6 +222,7 @@ export function ProjectModal({ index, onNavigate, onClose, getOrigin }: ProjectM
 
   useEffect(() => {
     document.body.classList.add("is-modal-open");
+    haptic("press");
     closeButton.current?.focus({ preventScroll: true });
     return () => {
       document.body.classList.remove("is-modal-open");

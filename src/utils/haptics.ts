@@ -6,7 +6,8 @@
  */
 export type HapticKind = "tap" | "press" | "success";
 
-const patterns: Record<HapticKind, number | number[]> = {
+/** Vibration patterns in ms. Keep them short: this is texture, not an alert. */
+export const HAPTIC_PATTERNS: Record<HapticKind, number | number[]> = {
   tap: 8,
   press: 14,
   success: [10, 50, 16],
@@ -27,12 +28,13 @@ export function haptic(kind: HapticKind = "tap"): boolean {
     return false;
   }
   const now = performance.now();
-  if (now - last < 70) {
+  // Plain taps are throttled; outcome feedback always plays (vibrate() replaces any running pattern).
+  if (kind === "tap" && now - last < 70) {
     return false;
   }
   last = now;
   try {
-    return navigator.vibrate(patterns[kind]);
+    return navigator.vibrate(HAPTIC_PATTERNS[kind]);
   } catch {
     // Some browsers expose vibrate() but reject the call.
     return false;

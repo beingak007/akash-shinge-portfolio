@@ -1,10 +1,22 @@
 import { useEffect, useRef } from "react";
 import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
+import { subscribeTheme } from "../../utils/theme.ts";
 import "./CursorParticles.css";
 
-/** Ember palette with an occasional cool spark. Repeats weight the warm tones. */
-const COLORS = ["#f3b27a", "#d4783a", "#ffd9b0", "#f3b27a", "#d4783a", "#6cc5b8"];
+/** Palette slots from the theme tokens; repeats weight the first two tones. */
+const COLOR_TOKENS = ["--particle-1", "--particle-2", "--particle-4", "--particle-1", "--particle-2", "--particle-3"];
+
+function themeColors(): string[] {
+  const style = getComputedStyle(document.documentElement);
+  return COLOR_TOKENS.map((token) => style.getPropertyValue(token).trim() || "#a78bfa");
+}
+
+/** Additive glow on dark; normal blending on light, where "lighter" washes out to white. */
+function themeBlend(): GlobalCompositeOperation {
+  const value = getComputedStyle(document.documentElement).getPropertyValue("--particle-blend").trim();
+  return value === "source-over" ? "source-over" : "lighter";
+}
 const MAX_PARTICLES = 220;
 const SPACING = 6; // px of pointer travel per emitted particle
 const MAX_PER_MOVE = 6;
@@ -71,10 +83,20 @@ export function CursorParticles() {
     if (!ctx) {
       return;
     }
-    const sprites = COLORS.map(makeSprite).filter((s): s is HTMLCanvasElement => Boolean(s));
+    const buildSprites = () =>
+      themeColors()
+        .map(makeSprite)
+        .filter((s): s is HTMLCanvasElement => Boolean(s));
+    let sprites = buildSprites();
+    let blend = themeBlend();
     if (sprites.length === 0) {
       return;
     }
+    // Re-tint on theme change; embers already in flight keep their slot.
+    const stopTheme = subscribeTheme(() => {
+      sprites = buildSprites();
+      blend = themeBlend();
+    });
 
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const pool: Particle[] = [];
@@ -122,7 +144,7 @@ export function CursorParticles() {
       let x1 = -Infinity;
       let y1 = -Infinity;
 
-      ctx.globalCompositeOperation = "lighter";
+      ctx.globalCompositeOperation = blend;
       for (let i = pool.length - 1; i >= 0; i -= 1) {
         const p = pool[i];
         if (!p) {
@@ -238,6 +260,7 @@ export function CursorParticles() {
     document.addEventListener("pointerout", onLeave);
     return () => {
       cancelAnimationFrame(frame);
+      stopTheme();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerdown", onDown);

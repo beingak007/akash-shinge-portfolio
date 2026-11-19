@@ -1,10 +1,11 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import {
   revealHeadings,
   revealMasks,
   revealSections,
   watchActiveSections,
 } from "./animations/scrollAnimations.ts";
+import { DevConsole } from "./components/console/DevConsole.tsx";
 import { CursorParticles } from "./components/cursor/CursorParticles.tsx";
 import { CustomCursor } from "./components/cursor/CustomCursor.tsx";
 import { FarmKart } from "./components/farmkart/FarmKart.tsx";
@@ -17,7 +18,6 @@ import { SectionProgress } from "./components/progress/SectionProgress.tsx";
 import { Work } from "./components/projects/Work.tsx";
 import { About } from "./components/sections/About.tsx";
 import { Capabilities } from "./components/sections/Capabilities.tsx";
-import { Code } from "./components/sections/Code.tsx";
 import { Contact } from "./components/sections/Contact.tsx";
 import { HowIThink } from "./components/sections/HowIThink.tsx";
 import { Metrics } from "./components/sections/Metrics.tsx";
@@ -26,47 +26,45 @@ import { StackMap } from "./components/sections/StackMap.tsx";
 import { Ambient } from "./components/system/Ambient.tsx";
 import { ClickFeedback } from "./components/system/ClickFeedback.tsx";
 import { PageTransition } from "./components/system/PageTransition.tsx";
+import { ScrollProgress } from "./components/system/ScrollProgress.tsx";
 import { SmoothScroll } from "./components/system/SmoothScroll.tsx";
+import { TerminalSection } from "./components/terminal/Terminal.tsx";
 import { useReducedMotion } from "./hooks/useReducedMotion.ts";
 import { useGSAP } from "./utils/gsap.ts";
+import { followSystemTheme } from "./utils/theme.ts";
 
+/** Page order. Experience precedes Projects, matching the nav. */
 const trackedIds = [
   "hero",
   "about",
   "services",
   "expertise",
-  "work",
   "experience",
-  "think",
+  "work",
   "farmkart",
+  "think",
   "code",
+  "terminal",
   "problems",
   "metrics",
   "contact",
 ] as const;
 
-/** Sections without their own nav entry light up the nearest one. */
+/** Sections without their own nav entry light up the nearest one (or none). */
 const navAlias: Record<string, string> = {
-  services: "expertise",
-  think: "experience",
-  code: "experience",
-  problems: "expertise",
-  metrics: "contact",
+  services: "about",
+  farmkart: "work",
 };
 
+/** The progress rail always shows one of its six stops. */
 const progressAlias: Record<string, string> = {
-  hero: "hero",
-  about: "hero",
-  services: "expertise",
-  expertise: "expertise",
-  work: "work",
-  experience: "experience",
-  think: "experience",
-  farmkart: "farmkart",
-  code: "farmkart",
-  problems: "expertise",
+  services: "about",
+  farmkart: "work",
+  think: "work",
+  code: "work",
+  terminal: "work",
+  problems: "work",
   metrics: "contact",
-  contact: "contact",
 };
 
 /**
@@ -81,11 +79,12 @@ const PageSections = memo(function PageSections() {
       <About />
       <Capabilities />
       <StackMap />
-      <Work />
       <Experience />
-      <HowIThink />
+      <Work />
       <FarmKart />
-      <Code />
+      <HowIThink />
+      <DevConsole />
+      <TerminalSection />
       <ProblemSet />
       <Metrics />
       <Contact />
@@ -98,12 +97,14 @@ export default function App() {
   const [sectionId, setSectionId] = useState("hero");
   const activeId = navAlias[sectionId] ?? sectionId;
 
+  useEffect(() => followSystemTheme(), []);
+
   useGSAP(
     () => {
       revealSections(document.body, reduced);
       revealHeadings(document.body, reduced);
       revealMasks(document.body, reduced);
-      watchActiveSections([...trackedIds], setSectionId);
+      return watchActiveSections([...trackedIds], setSectionId);
     },
     { dependencies: [reduced], revertOnUpdate: true },
   );
@@ -114,6 +115,7 @@ export default function App() {
         Skip to content
       </a>
       <SmoothScroll />
+      <ScrollProgress />
       <Ambient sectionId={sectionId} />
       <PageLoader />
       <PageTransition />

@@ -5,7 +5,7 @@ import { useDesktopPointer } from "../../hooks/useDesktopPointer.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { gsap, ScrollTrigger, useGSAP } from "../../utils/gsap.ts";
 import { scrollToSection } from "../../utils/scrollToSection.ts";
-import { ProfilePortrait } from "../profile/ProfilePortrait.tsx";
+import { ThemeToggle } from "./ThemeToggle.tsx";
 import "./FloatingNav.css";
 
 interface FloatingNavProps {
@@ -165,7 +165,9 @@ export function FloatingNav({ activeId }: FloatingNavProps) {
           onNav("hero");
         }}
       >
-        <ProfilePortrait treatment="nav" />
+        <span className="nav__monogram" aria-hidden="true">
+          AS
+        </span>
         <span className="nav__brand-name">AKASH</span>
       </a>
 
@@ -212,6 +214,8 @@ export function FloatingNav({ activeId }: FloatingNavProps) {
           </a>
         ))}
       </nav>
+
+      <ThemeToggle />
     </header>
   );
 }

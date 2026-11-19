@@ -17,7 +17,8 @@ export const profile: Profile = {
     "Senior Software Engineer building scalable systems, high-performance applications, and thoughtful user experiences.",
   stackLine: "JAVA · REACT · KAFKA",
   photo: "/profile.jpg",
-  photoAlt: "/profile-workspace-warm.jpg",
+  photoAlt: "/profile-standing.jpg",
+  heroPhoto: "/profile-desk.jpg",
   statement:
     "I build scalable systems, distributed services, and experiences that solve real engineering problems.",
   links: {
@@ -44,8 +45,8 @@ export const profile: Profile = {
 /** Intrinsic sizes of every portrait in /public, so layout is reserved before load. */
 export const photoSizes: Record<string, { width: number; height: number }> = {
   "/profile.jpg": { width: 591, height: 942 },
-  "/profile-workspace-warm.jpg": { width: 1211, height: 1299 },
-  "/profile-workspace-modern.jpg": { width: 1087, height: 1447 },
+  "/profile-desk.jpg": { width: 1199, height: 1312 },
+  "/profile-standing.jpg": { width: 1205, height: 1306 },
 };
 
 export const heroMeta: HeroMetaItem[] = [

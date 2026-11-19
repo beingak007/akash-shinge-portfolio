@@ -61,7 +61,7 @@ export function Capabilities() {
   return (
     <section ref={root} className="section caps" id="services">
       <div className="section__head">
-        <p className="kicker">02 — WHAT I DO</p>
+        <p className="kicker">WHAT I DO</p>
         <p className="kicker">DISCIPLINES</p>
       </div>
       <div className="caps__intro">

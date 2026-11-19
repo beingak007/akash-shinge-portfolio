@@ -1,19 +1,20 @@
 import type { NavigationItem, ProgressSection } from "../types/index.ts";
 
+/** Primary navigation, in page order. */
 export const navigation: NavigationItem[] = [
-  { id: "work", index: "01", label: "WORK", href: "#work" },
-  { id: "experience", index: "02", label: "EXPERIENCE", href: "#experience" },
-  { id: "expertise", index: "03", label: "STACK", href: "#expertise" },
-  { id: "farmkart", index: "04", label: "ARCHITECTURE", href: "#farmkart" },
-  { id: "about", index: "05", label: "ABOUT", href: "#about" },
+  { id: "hero", index: "01", label: "HOME", href: "#hero" },
+  { id: "about", index: "02", label: "ABOUT", href: "#about" },
+  { id: "expertise", index: "03", label: "SKILLS", href: "#expertise" },
+  { id: "experience", index: "04", label: "EXPERIENCE", href: "#experience" },
+  { id: "work", index: "05", label: "PROJECTS", href: "#work" },
   { id: "contact", index: "06", label: "CONTACT", href: "#contact" },
 ];
 
 export const progressSections: ProgressSection[] = [
-  { id: "hero", index: "01", label: "INTRO" },
-  { id: "work", index: "02", label: "WORK" },
-  { id: "experience", index: "03", label: "LOG" },
-  { id: "expertise", index: "04", label: "STACK" },
-  { id: "farmkart", index: "05", label: "ARCH" },
+  { id: "hero", index: "01", label: "HOME" },
+  { id: "about", index: "02", label: "ABOUT" },
+  { id: "expertise", index: "03", label: "SKILLS" },
+  { id: "experience", index: "04", label: "LOG" },
+  { id: "work", index: "05", label: "WORK" },
   { id: "contact", index: "06", label: "LINK" },
 ];

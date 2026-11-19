@@ -35,6 +35,12 @@ export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => 
   const moveX = motion ? gsap.quickTo(frame, "x", { duration: 0.7, ease: "power3.out" }) : null;
   const moveY = motion ? gsap.quickTo(frame, "y", { duration: 0.7, ease: "power3.out" }) : null;
   const lightX = glare ? gsap.quickTo(glare, "x", { duration: 0.45, ease: "power3.out" }) : null;
+  // Hover "distortion": the media leans into fast pointer movement, then settles.
+  // A transform on the media layer — no filters, so it costs nothing to paint.
+  const media = frame.querySelector<HTMLElement>("[data-fx-media]");
+  const skew = motion && media ? gsap.quickTo(media, "skewX", { duration: 0.6, ease: "power3.out" }) : null;
+  let lastPointerX: number | null = null;
+  let settleTimer = 0;
   const lightY = glare ? gsap.quickTo(glare, "y", { duration: 0.45, ease: "power3.out" }) : null;
 
   // Measured once per hover / press; tilt does not change the layout box.
@@ -71,6 +77,16 @@ export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => 
     }
     const box = bounds ?? measure();
     light(event, box);
+    if (skew) {
+      if (lastPointerX !== null) {
+        skew(gsap.utils.clamp(-6, 6, (event.clientX - lastPointerX) * 0.4));
+      }
+      lastPointerX = event.clientX;
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => {
+        skew(0);
+      }, 110);
+    }
     if (!rotX || !rotY || !moveX || !moveY) {
       return;
     }
@@ -84,6 +100,9 @@ export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => 
 
   const onLeave = () => {
     bounds = null;
+    lastPointerX = null;
+    window.clearTimeout(settleTimer);
+    skew?.(0);
     frame.classList.remove("is-hot", "is-pressed");
     rotX?.(0);
     rotY?.(0);
@@ -134,6 +153,7 @@ export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => 
 
   return () => {
     window.clearTimeout(releaseTimer);
+    window.clearTimeout(settleTimer);
     window.removeEventListener("scroll", onScroll);
     frame.removeEventListener("pointerenter", onEnter);
     frame.removeEventListener("pointermove", onMove);
@@ -144,6 +164,9 @@ export function bindMediaFx(frame: HTMLElement, options: MediaFxOptions): () => 
     frame.classList.remove("is-hot", "is-pressed");
     if (motion) {
       gsap.set(frame, { rotateX: 0, rotateY: 0, x: 0, y: 0 });
+      if (media) {
+        gsap.set(media, { skewX: 0 });
+      }
     }
   };
 }

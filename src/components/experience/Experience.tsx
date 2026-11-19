@@ -24,7 +24,7 @@ export function Experience() {
   return (
     <section ref={root} className="section experience" id="experience">
       <div className="section__head">
-        <p className="kicker">05 — EXPERIENCE</p>
+        <p className="kicker">04 — EXPERIENCE</p>
         <p className="kicker">ENGINEERING LOG</p>
       </div>
       <div className="experience__intro">

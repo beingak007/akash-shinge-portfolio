@@ -7,8 +7,10 @@ import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { gsap, useGSAP } from "../../utils/gsap.ts";
 import { haptic } from "../../utils/haptics.ts";
 import { ProfilePortrait } from "../profile/ProfilePortrait.tsx";
+import { ContactForm } from "./ContactForm.tsx";
 import { LocalTime } from "./LocalTime.tsx";
 import { RollText } from "./RollText.tsx";
+import { SocialIcon } from "./SocialIcon.tsx";
 import "./Contact.css";
 
 function handleFrom(url: string): string {
@@ -16,10 +18,16 @@ function handleFrom(url: string): string {
 }
 
 const socials = [
-  { id: "linkedin", name: "LinkedIn", href: profile.links.linkedin },
-  { id: "github", name: "GitHub", href: profile.links.github },
-  { id: "leetcode", name: "LeetCode", href: leetcode.url },
-].filter((item): item is { id: string; name: string; href: string } => Boolean(item.href));
+  { id: "linkedin", name: "LinkedIn", href: profile.links.linkedin, handle: handleFrom(profile.links.linkedin) },
+  { id: "github", name: "GitHub", href: profile.links.github, handle: handleFrom(profile.links.github ?? "") },
+  { id: "leetcode", name: "LeetCode", href: leetcode.url, handle: handleFrom(leetcode.url) },
+  {
+    id: "email",
+    name: "Email",
+    href: profile.links.email ? `mailto:${profile.links.email}` : null,
+    handle: profile.links.email ?? "",
+  },
+].filter((item): item is { id: string; name: string; href: string; handle: string } => Boolean(item.href));
 
 export function Contact() {
   const root = useRef<HTMLElement>(null);
@@ -139,20 +147,25 @@ export function Contact() {
         </div>
       </div>
 
+      <ContactForm />
+
       <ul className="contact__socials" data-socials>
         {socials.map((item, index) => (
           <li key={item.id}>
             <a
               className="social"
               href={item.href}
-              target="_blank"
-              rel="noreferrer"
+              target={item.id === "email" ? undefined : "_blank"}
+              rel={item.id === "email" ? undefined : "noreferrer"}
               data-cursor="open"
               data-social
             >
               <span className="social__index">{String(index + 1).padStart(2, "0")}</span>
+              <span className="social__icon" aria-hidden="true">
+                <SocialIcon id={item.id} />
+              </span>
               <span className="social__name">{item.name}</span>
-              <span className="social__handle">{handleFrom(item.href)}</span>
+              <span className="social__handle">{item.handle}</span>
               <span className="social__arrow" aria-hidden="true">
                 ↗
               </span>

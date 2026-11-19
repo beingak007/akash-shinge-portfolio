@@ -6,7 +6,25 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#0b0b0a" />
+    <meta name="theme-color" content="#07070b" />
+    <script>
+      /* Pick the theme before first paint: saved choice, else the OS preference. */
+      (function () {
+        var theme = "dark";
+        try {
+          var saved = localStorage.getItem("theme");
+          theme = saved === "light" || saved === "dark"
+            ? saved
+            : window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        } catch (e) {}
+        var root = document.documentElement;
+        root.dataset.theme = theme;
+        root.style.colorScheme = theme;
+        if (theme === "light") {
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f6f3ee");
+        }
+      })();
+    </script>
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="googlebot" content="index, follow" />
     <title>Akash Shinge | Senior Software Engineer in Pune</title>
@@ -31,10 +49,10 @@
     />
     <meta property="og:locale" content="en_IN" />
     <meta property="og:url" content="https://akash-shinge.vercel.app/" />
-    <meta property="og:image" content="https://akash-shinge.vercel.app/profile-workspace-warm.jpg" />
+    <meta property="og:image" content="https://akash-shinge.vercel.app/profile-desk.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="1211" />
-    <meta property="og:image:height" content="1299" />
+    <meta property="og:image:width" content="1199" />
+    <meta property="og:image:height" content="1312" />
     <meta property="og:image:alt" content="Akash Shinge, Senior Software Engineer" />
     <meta property="profile:first_name" content="Akash" />
     <meta property="profile:last_name" content="Shinge" />
@@ -45,20 +63,20 @@
       name="twitter:description"
       content="Official portfolio of Akash Shinge — Senior Software Engineer in Pune, India."
     />
-    <meta name="twitter:image" content="https://akash-shinge.vercel.app/profile-workspace-warm.jpg" />
+    <meta name="twitter:image" content="https://akash-shinge.vercel.app/profile-desk.jpg" />
     <meta name="twitter:image:alt" content="Akash Shinge" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="me" href="https://www.linkedin.com/in/akash-shinge-as10/" />
     <link rel="me" href="https://github.com/beingak007" />
     <style>
       /* Build-time crawler content (src/seo/crawlerMarkup.ts); React replaces it on load. */
-      .seo-shell { max-width: 46rem; margin: 0 auto; padding: 6rem 1.5rem 4rem; background: #0b0b0a; color: #ece7dc; font: 400 1rem/1.65 "IBM Plex Sans", system-ui, sans-serif; }
+      .seo-shell { max-width: 46rem; margin: 0 auto; padding: 6rem 1.5rem 4rem; background: var(--bg, #07070b); color: var(--ink, #ecebf5); font: 400 1rem/1.65 "IBM Plex Sans", system-ui, sans-serif; }
       .seo-shell h1 { margin: 0.4rem 0; font: 400 clamp(3rem, 10vw, 6rem)/0.95 "Instrument Serif", Georgia, serif; letter-spacing: -0.03em; }
       .seo-shell h2 { margin: 2.4rem 0 0.6rem; font: 400 1.6rem/1.2 "Instrument Serif", Georgia, serif; }
-      .seo-shell__kicker, .seo-shell__role { margin: 0; font: 400 0.72rem/1.6 "IBM Plex Mono", monospace; letter-spacing: 0.18em; text-transform: uppercase; color: #d4783a; }
-      .seo-shell p, .seo-shell li { color: #b7b1a4; }
+      .seo-shell__kicker, .seo-shell__role { margin: 0; font: 400 0.72rem/1.6 "IBM Plex Mono", monospace; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent, #a78bfa); }
+      .seo-shell p, .seo-shell li { color: var(--ink-soft, #b3b1c6); }
       .seo-shell ul { padding-left: 1.1rem; }
-      .seo-shell a { color: #f3b27a; }
+      .seo-shell a { color: var(--accent-hot, #60a5fa); }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -101,7 +119,7 @@
               "name": "Full Stack Developer"
             },
             "url": "https://akash-shinge.vercel.app/",
-            "image": "https://akash-shinge.vercel.app/profile-workspace-warm.jpg",
+            "image": "https://akash-shinge.vercel.app/profile-desk.jpg",
             "description": "Akash Shinge is a Senior Software Engineer in Pune, India, building Java, React, and distributed systems.",
             "address": {
               "@type": "PostalAddress",

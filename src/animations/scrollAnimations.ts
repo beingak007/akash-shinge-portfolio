@@ -246,20 +246,45 @@ export function animateProjectFlows(
   });
 }
 
+/**
+ * Reports the section under the middle of the viewport. Re-picks on every
+ * toggle (in either direction) and after every layout refresh, so a section
+ * that looked active while images and fonts were still loading cannot stay
+ * "stuck" active once the page settles. Missing sections are skipped.
+ */
 export function watchActiveSections(
   ids: string[],
   onChange: (id: string) => void,
-): ScrollTrigger[] {
-  return ids.map((id) =>
+): () => void {
+  const present = ids.filter((id) => document.getElementById(id));
+  // Declared before creation: ScrollTrigger may fire onToggle synchronously
+  // while a trigger is being created.
+  let triggers: ScrollTrigger[] = [];
+  let current = "";
+  const pick = () => {
+    for (let i = triggers.length - 1; i >= 0; i -= 1) {
+      const trigger = triggers[i];
+      const id = present[i];
+      if (trigger?.isActive && id) {
+        if (id !== current) {
+          current = id;
+          onChange(id);
+        }
+        return;
+      }
+    }
+  };
+  triggers = present.map((id) =>
     ScrollTrigger.create({
       trigger: `#${id}`,
       start: "top center",
       end: "bottom center",
-      onToggle: (self) => {
-        if (self.isActive) {
-          onChange(id);
-        }
-      },
+      onToggle: pick,
     }),
   );
+  ScrollTrigger.addEventListener("refresh", pick);
+  pick();
+  return () => {
+    ScrollTrigger.removeEventListener("refresh", pick);
+  };
 }

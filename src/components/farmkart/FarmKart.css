@@ -134,8 +134,8 @@
 }
 
 .farmkart__runtime {
-  fill: rgba(212, 120, 58, 0.025);
-  stroke: rgba(212, 120, 58, 0.22);
+  fill: rgb(var(--accent-rgb) / 0.025);
+  stroke: rgb(var(--accent-rgb) / 0.22);
   stroke-dasharray: 3 5;
   stroke-width: 1;
 }
@@ -154,7 +154,7 @@
 
 .farmkart__edge {
   fill: none;
-  stroke: rgba(236, 231, 220, 0.2);
+  stroke: rgb(var(--ink-rgb) / 0.2);
   stroke-width: 1.05;
 }
 
@@ -199,7 +199,7 @@
   min-height: 2.35rem;
   padding: 0 0.7rem;
   white-space: nowrap;
-  border: 1px solid rgba(11, 11, 10, 0.4);
+  border: 1px solid rgb(var(--bg-rgb) / 0.4);
   font-family: var(--mono);
   font-size: 0.58rem;
   letter-spacing: 0.12em;

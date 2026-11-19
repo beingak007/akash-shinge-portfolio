@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { leetcode } from "../../data/leetcode.ts";
 import { useReducedMotion } from "../../hooks/useReducedMotion.ts";
 import { gsap, useGSAP } from "../../utils/gsap.ts";
-import { ProfilePortrait } from "../profile/ProfilePortrait.tsx";
 import "./ProblemSet.css";
 
 const maxDifficulty = Math.max(...leetcode.difficulties.map((item) => item.count), 1);
@@ -41,10 +40,6 @@ export function ProblemSet() {
       </div>
 
       <div className="problems__grid">
-        <figure className="problems__figure" data-reveal>
-          <ProfilePortrait treatment="leetcode" src={leetcode.photo} />
-          <figcaption>LEETCODE / {leetcode.username.toUpperCase()}</figcaption>
-        </figure>
         <div data-reveal>
           <h2 className="display problems__title">Accepted work, not a scoreboard.</h2>
           <p className="lede">

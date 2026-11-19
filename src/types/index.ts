@@ -43,7 +43,6 @@ export interface LeetCodeProfile {
   languages: LeetCodeLanguage[];
   tags: LeetCodeTag[];
   school: string | null;
-  photo: string;
 }
 
 export interface Profile {
@@ -60,6 +59,8 @@ export interface Profile {
   stackLine: string;
   photo: string;
   photoAlt: string;
+  /** Portrait shown in the hero. */
+  heroPhoto: string;
   statement: string;
   links: ProfileLinks;
   seo: SeoMeta;

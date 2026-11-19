@@ -63,7 +63,7 @@
 }
 
 .playground__node rect {
-  stroke: rgba(11, 11, 10, 0.35);
+  stroke: rgb(var(--bg-rgb) / 0.35);
 }
 
 .playground__node text {

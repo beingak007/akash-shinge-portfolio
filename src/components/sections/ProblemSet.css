@@ -5,7 +5,7 @@
 
 .problems__grid {
   display: grid;
-  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   gap: 2.4rem;
   align-items: end;
 }

@@ -12,7 +12,9 @@ export function buildHeroIntro(root: HTMLElement, reducedMotion: boolean): gsap.
   const last = q("[data-hero-last] > span");
   const heading = root.querySelector<HTMLElement>("[data-hero-heading]");
   const meta = q("[data-hero-meta]");
-  const system = q("[data-hero-system]");
+  const frame = q("[data-hero-frame]");
+  const portraitImage = q("[data-hero-frame] [data-portrait-img]");
+  const badges = q("[data-hero-badge]");
   const actions = q("[data-hero-actions] > *");
   const cue = q("[data-hero-scroll]");
 
@@ -26,7 +28,9 @@ export function buildHeroIntro(root: HTMLElement, reducedMotion: boolean): gsap.
   gsap.set(labels, { opacity: 0, y: 12 });
   gsap.set(last, { yPercent: 108 });
   gsap.set(meta, { opacity: 0, y: 10 });
-  gsap.set(system, { opacity: 0, y: 34, scale: 0.97 });
+  gsap.set(frame, { clipPath: "inset(100% 0% 0% 0%)" });
+  gsap.set(portraitImage, { scale: 1.35 });
+  gsap.set(badges, { opacity: 0, scale: 0.6, y: 18 });
   gsap.set(actions, { opacity: 0, y: 18 });
   gsap.set(cue, { opacity: 0 });
 
@@ -65,7 +69,9 @@ export function buildHeroIntro(root: HTMLElement, reducedMotion: boolean): gsap.
 
   timeline
     .to(labels, { opacity: 1, y: 0, duration: 0.6, stagger: 0.07 }, 0.4)
-    .to(system, { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: "expo.out" }, 0.6)
+    .to(frame, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "expo.inOut" }, 0.35)
+    .to(portraitImage, { scale: 1.02, duration: 1.8, ease: "expo.out" }, 0.55)
+    .to(badges, { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: "back.out(1.7)", stagger: 0.08 }, 1.05)
     .to(actions, { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 }, 0.95)
     .to(meta, { opacity: 1, y: 0, duration: 0.5, stagger: 0.07 }, 1.05)
     .to(cue, { opacity: 1, duration: 0.6 }, 1.3);
@@ -105,7 +111,8 @@ export function bindHeroPointer(
   const stage = root.querySelector<HTMLElement>("[data-hero-stage]") ?? root;
   const grid = root.querySelector<HTMLElement>("[data-hero-grid]");
   const heading = root.querySelector<HTMLElement>("[data-hero-heading]");
-  const system = root.querySelector<HTMLElement>("[data-hero-system]");
+  const visual = root.querySelector<HTMLElement>("[data-hero-frame]");
+  const badgeLayer = root.querySelector<HTMLElement>("[data-hero-badges]");
   const name = root.querySelector<HTMLElement>("[data-hero-name]");
 
   const onMove = (event: PointerEvent) => {
@@ -130,13 +137,18 @@ export function bindHeroPointer(
       ease: "power2.out",
       overwrite: "auto",
     });
-    gsap.to(system, {
-      x: x * -12,
+    // Portrait and badges sit at different depths, so they drift apart.
+    gsap.to(visual, {
+      x: x * -10,
       y: y * -8,
-      rotateY: x * -10,
-      rotateX: y * 6,
-      transformPerspective: 920,
-      duration: 0.85,
+      duration: 0.9,
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+    gsap.to(badgeLayer, {
+      x: x * 26,
+      y: y * 18,
+      duration: 1.1,
       ease: "power2.out",
       overwrite: "auto",
     });

@@ -57,7 +57,7 @@ export function About() {
   return (
     <section ref={root} className="section about" id="about">
       <div className="section__head">
-        <p className="kicker">01 — ABOUT</p>
+        <p className="kicker">02 — ABOUT</p>
         <p className="kicker">ENGINEERING PROFILE</p>
       </div>
 
