@@ -1,18 +1,36 @@
 /**
- * Visual tactile feedback. Deliberately small: a sub-2px damped buzz on the
- * element that was pressed and a thin ripple at the pointer. Nothing moves the
- * page itself.
+ * Visual tactile feedback: a damped buzz on the element that was pressed and a
+ * thin ripple at the pointer. Subtle when a real haptic accompanies it,
+ * clearly visible when it is the only feedback. Nothing moves the page itself.
  *
  * The buzz runs through the Web Animations API on the individual `translate`
  * / `rotate` properties: no forced reflow to restart it, and it composes with
  * GSAP-driven `transform` (tilt, magnetic) instead of fighting it.
  */
-const BUZZ: Keyframe[] = [
+import { canFeelHaptics } from "../utils/haptics.ts";
+
+/** Paired with a real haptic on phones: barely visible, the touch does the work. */
+const BUZZ_SUBTLE: Keyframe[] = [
   { translate: "0 0", rotate: "0deg" },
   { translate: "-1.4px 0.5px", rotate: "-0.35deg", offset: 0.16 },
   { translate: "1.2px -0.5px", rotate: "0.28deg", offset: 0.34 },
   { translate: "-0.7px 0.3px", rotate: "-0.16deg", offset: 0.52 },
   { translate: "0.35px 0", rotate: "0.06deg", offset: 0.72 },
+  { translate: "0 0", rotate: "0deg" },
+];
+
+/**
+ * Laptops, desktops, and phones without vibration: the motion IS the
+ * feedback, so it is clearly visible — on the pressed element only, never
+ * the page.
+ */
+const BUZZ_VISIBLE: Keyframe[] = [
+  { translate: "0 0", rotate: "0deg" },
+  { translate: "-3px 1px", rotate: "-0.9deg", offset: 0.12 },
+  { translate: "2.6px -1px", rotate: "0.75deg", offset: 0.28 },
+  { translate: "-1.9px 0.6px", rotate: "-0.5deg", offset: 0.44 },
+  { translate: "1.1px -0.3px", rotate: "0.25deg", offset: 0.62 },
+  { translate: "-0.45px 0", rotate: "-0.1deg", offset: 0.8 },
   { translate: "0 0", rotate: "0deg" },
 ];
 
@@ -22,10 +40,14 @@ export function buzz(element: Element): void {
   if (typeof element.animate !== "function") {
     return;
   }
+  const felt = canFeelHaptics();
   running.get(element)?.cancel();
   running.set(
     element,
-    element.animate(BUZZ, { duration: 280, easing: "cubic-bezier(0.3, 0.7, 0.4, 1)" }),
+    element.animate(felt ? BUZZ_SUBTLE : BUZZ_VISIBLE, {
+      duration: felt ? 280 : 380,
+      easing: "cubic-bezier(0.3, 0.7, 0.4, 1)",
+    }),
   );
 }
 
